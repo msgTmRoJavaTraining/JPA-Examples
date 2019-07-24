@@ -42,11 +42,8 @@ public class ValidationEntity {
   private int hardCodedValidation;
 
   @PrePersist
-  @PostPersist
   @PreUpdate
-  @PostUpdate
   @PreRemove
-  @PostRemove
   public void check() {
     if (salary > 10000 && !name.contains("Trump")) {
       throw new ValidationException("Salary is to high for this dude.");
