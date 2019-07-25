@@ -9,9 +9,9 @@ import javax.persistence.Embeddable;
 @Embeddable
 public class EmbeddableEntity {
 
+
   @Column(name = "embed_1")
   private String embeddableString;
-
 
   private int embeddableInt;
 
