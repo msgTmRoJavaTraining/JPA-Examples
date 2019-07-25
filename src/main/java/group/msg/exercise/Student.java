@@ -3,7 +3,9 @@ package group.msg.exercise;
 import lombok.Data;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
 import java.util.List;
+
 
 @Entity
 @Data
@@ -13,6 +15,7 @@ public class Student {
     @GeneratedValue
     private int studentId;
 
+    @NotNull
     @Embedded
     private Address homeAddress;
     @ManyToOne

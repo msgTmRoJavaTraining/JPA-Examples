@@ -15,6 +15,8 @@ import org.jboss.shrinkwrap.api.spec.WebArchive;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
+import javax.persistence.Query;
+import java.sql.PreparedStatement;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -28,6 +30,13 @@ public class ExerciseTest extends JPABaseTest {
                 .addAsResource("test-persistence.xml", "META-INF/persistence.xml")
                 .addAsResource("../classes/META-INF/beans.xml", "META-INF/beans.xml");
     }
+    @Override
+    protected void internalClearData() {
+        em.createQuery("delete from Student ").executeUpdate();
+        em.createQuery("delete from Subject ").executeUpdate();
+        em.createQuery("delete from University ").executeUpdate();
+    }
+
     @Override
     protected void insertData() throws Exception {
         utx.begin();
@@ -76,15 +85,26 @@ public class ExerciseTest extends JPABaseTest {
             students.add(stud2);
             students.add(stud3);
 
-        uni1.setStudents(students);
+
+        for (Student s:students) {
+            em.persist(s);
+        }
+        for (Subject s:subjects) {
+            em.persist(s);
+        }
+
         em.persist(uni1);
         utx.commit();
         em.clear();
     }
-    @Test
-    public void testighdhsj()
-    {
 
+    @Test
+    public void notNullTest()
+    {
+        Student st=new Student();
+        st.setLastName("ddsdss");
+        st.setFirstName("fdsfsddsd");
+        em.persist(st);
     }
 
 }
