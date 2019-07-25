@@ -37,32 +37,6 @@ public class StudentTest extends JPABaseTest
         utx.begin();
         em.joinTransaction();
 
-//        HomeAddress homeAddress=new HomeAddress("Parvan","Timisoara","Romania");
-//
-////        University university = new University();
-//
-//
-//        List<StudentEntity> studentEntities=new ArrayList<>();
-//        List<Subject> subjects=new ArrayList<>();
-//
-//
-//        University u=new University(studentEntities,"UPT","Romania");
-//
-//        Subject s1=new Subject();
-//        s1.setName("chimie");
-//        subjects.add(s1);
-//        StudentEntity s=new StudentEntity(u,homeAddress,"Hach","Bence","CTI");
-//
-//        s.setStudent_id(1);
-//
-//        s.setSubjects(subjects);
-//        studentEntities.add(s);
-//
-////        university.setCountry("UK");
-////        university.setName("Oxford");
-////        university.setStudentEntityList(studentEntities);
-////        university.setUniversity_id(1);
-
         ArrayList<StudentEntity> studentEntities=new ArrayList<>();
 
         University university=new University();
@@ -122,7 +96,7 @@ public class StudentTest extends JPABaseTest
         System.out.println("Checking number of created entities...");
 
         Query q = em.createNativeQuery("select * from SUBJECT",Subject.class);
-        List<Subject> subjsdf =q.getResultList();
-        Assert.assertEquals("Entities not found in the database!", 2, subjsdf.size());
+        List<Subject> subTest =q.getResultList();
+        Assert.assertEquals("Entities not found in the database!", 2, subTest.size());
      }
 }
