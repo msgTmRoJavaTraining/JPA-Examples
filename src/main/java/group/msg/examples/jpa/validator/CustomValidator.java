@@ -2,14 +2,17 @@ package group.msg.examples.jpa.validator;
 
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
+import java.util.ArrayList;
+import java.util.List;
 
 public class CustomValidator implements ConstraintValidator<CustomValidation, Integer> {
 
-  private boolean includeHardCodedValue;
+  private boolean valueBaned;
+  private List<String> name = new ArrayList<>();
 
   @Override
   public void initialize(CustomValidation validation) {
-    includeHardCodedValue = validation.includeHardCodedValue();
+    valueBaned = validation.includeHardCodedValue();
   }
 
   @Override
@@ -19,7 +22,7 @@ public class CustomValidator implements ConstraintValidator<CustomValidation, In
     }
 
     if (value == 123) {
-        return includeHardCodedValue;
+        return valueBaned;
     }
 
     return value % 2 == 0;
