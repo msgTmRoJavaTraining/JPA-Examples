@@ -3,11 +3,13 @@ package group.msg.examples.jpa.entity;
 import lombok.Data;
 
 import javax.persistence.Embeddable;
+import javax.validation.constraints.NotNull;
 
 @Embeddable
 @Data
 public class HomeAddress
 {
+
     private String street;
     private String city;
     private String country;

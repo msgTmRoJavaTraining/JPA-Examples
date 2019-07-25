@@ -84,6 +84,19 @@ public class StudentTest extends JPABaseTest
         utx.commit();
 
         em.clear();
+
+
+
+
+    }
+
+    @Test
+    public void testExcept()
+    {
+        StudentEntity stud1=new StudentEntity();
+
+        stud1.setLast_name("A");
+        em.persist(stud1);
     }
 
     @Override

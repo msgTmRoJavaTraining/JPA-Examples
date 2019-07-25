@@ -1,6 +1,8 @@
 package group.msg.examples.jpa.entity;
+
 import lombok.Data;
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 import java.util.List;
 
@@ -17,6 +19,7 @@ public class StudentEntity implements Serializable
     @JoinColumn(name = "universitate")
     private University university;
 
+    @NotNull
     @Embedded
     private HomeAddress homeAddress;
 
