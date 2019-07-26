@@ -15,6 +15,7 @@ import java.util.Collection;
 
 @Data
 @Entity
+@CustomForAddress
 @Table(name = "student_entity")
 public class StudentEntity implements Serializable {
 
@@ -31,6 +32,7 @@ public class StudentEntity implements Serializable {
 
     @NotNull
     @Column(name = "first_name")
+    @CustomForName
     private String first_name;
 
     @NotNull(message="Please specify an e-mail")

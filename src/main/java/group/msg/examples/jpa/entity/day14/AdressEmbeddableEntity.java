@@ -20,6 +20,7 @@ public class AdressEmbeddableEntity {
     private String city;
 
     @NotNull
+
     @Column(name = "country")
     private String country;
 

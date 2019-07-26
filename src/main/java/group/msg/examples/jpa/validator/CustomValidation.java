@@ -1,5 +1,7 @@
 package group.msg.examples.jpa.validator;
 
+import group.msg.examples.jpa.entity.day14.CustomValidationForAdress;
+
 import javax.validation.Constraint;
 import javax.validation.Payload;
 import java.lang.annotation.Retention;

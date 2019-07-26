@@ -21,6 +21,7 @@ import javax.persistence.PersistenceUnit;
 import javax.persistence.Query;
 import javax.validation.ConstraintViolation;
 import javax.validation.ConstraintViolationException;
+import javax.xml.ws.soap.Addressing;
 import java.util.*;
 
 @RunWith(Arquillian.class)
@@ -40,7 +41,7 @@ public class StudentTest extends JPABaseTest {
     @Test
     public void createStudentEntity(){
         Query q = em.createNativeQuery("SELECT * FROM STUDENT_ENTITY");
-        Assert.assertEquals("Entities not found in the database!",1, q.getResultList().size());
+        Assert.assertEquals("Entities not found in the database!",2, q.getResultList().size());
     }
 
     @Test
@@ -51,46 +52,100 @@ public class StudentTest extends JPABaseTest {
 
     @Test
     public void deleteStudentEntity(){
-
         StudentEntity studentEntity=em.find(StudentEntity.class,20);
         em.remove(studentEntity);
     }
 
-
-    private void validatePersistenceObject(String first_name, String last_name, String email, String section, Collection<SubjectEntity> subjectList) throws Exception {
-        System.out.println("Validating entity with name: " + first_name);
-        EntityManager entityManager = emf.createEntityManager();
+    @Test
+    public void validateName()throws Exception{
         utx.begin();
-        entityManager.joinTransaction();
+        em.joinTransaction();
+        AdressEmbeddableEntity adressEmbeddableEntity= new AdressEmbeddableEntity();
+        adressEmbeddableEntity.setCountry("Romania");
+        adressEmbeddableEntity.setStreet("Lunga");
+        adressEmbeddableEntity.setCity("Timisoara");
 
-        StudentEntity studentEntity=new StudentEntity();
-        studentEntity.setFirst_name(first_name);
-        studentEntity.setLast_name(last_name);
-        studentEntity.setEmail(email);
-        studentEntity.setSection(section);
-        studentEntity.setSubjectList(subjectList);
+        UniversityEntity universityEntity=new UniversityEntity();
+        universityEntity.setCountry("Romania");
+        universityEntity.setName("Poli");
 
-//        try {
-//            entityManager.persist(studentEntity);
-//            utx.commit();
-//        } catch (ConstraintViolationException e) {
-//            utx.rollback();
-//            ConstraintViolation<?> constraint = e.getConstraintViolations().iterator().next();
-//            javax.validation.Path propertyPath = constraint.getPropertyPath();
-//            if (!Objects.equals(validationField, propertyPath.toString())) {
-//                throw new IllegalArgumentException("Invalid constraint violation for field: " + propertyPath);
-//            }
-//        }
+        em.persist(universityEntity);
+
+
+        List<SubjectEntity> subjectEntities = new ArrayList<>();
+        SubjectEntity subject = new SubjectEntity();
+        subject.setName("Romana");
+        subjectEntities.add(subject);
+
+        for (SubjectEntity sub : subjectEntities){
+            em.persist(sub);
+        }
+
+        StudentEntity s = new StudentEntity();
+        s.setAddress(adressEmbeddableEntity);
+        s.setEmail("alex@gmail.com");
+        s.setFirst_name("jf");
+        s.setLast_name("Gheorghe");
+        s.setUniversity_id(universityEntity);
+        s.setSection("Mec");
+        s.setSubjectList(subjectEntities);
+
+        try {
+            em.persist(s);
+            utx.commit();
+        } catch (ConstraintViolationException e) {
+            utx.rollback();
+            ConstraintViolation<?> constraint = e.getConstraintViolations().iterator().next();
+            String message=constraint.getMessage();
+            System.out.println("Invalid constraint violation for field: " + message);
+        }
     }
 
+    @Test
+    public void validateAddress()throws Exception{
+        utx.begin();
+        em.joinTransaction();
+        AdressEmbeddableEntity adressEmbeddableEntity= new AdressEmbeddableEntity();
+        adressEmbeddableEntity.setCountry("Romania");
+        adressEmbeddableEntity.setStreet("Lunga");
+        adressEmbeddableEntity.setCity("Timisoara");
+
+        UniversityEntity universityEntity=new UniversityEntity();
+        universityEntity.setCountry("Romania");
+        universityEntity.setName("Poli");
+
+        em.persist(universityEntity);
 
 
+        List<SubjectEntity> subjectEntities = new ArrayList<>();
+        SubjectEntity subject = new SubjectEntity();
+        subject.setName("Romana");
+        subjectEntities.add(subject);
+
+        for (SubjectEntity sub : subjectEntities){
+            em.persist(sub);
+        }
+
+        StudentEntity s = new StudentEntity();
+        s.setAddress(adressEmbeddableEntity);
+        s.setEmail("alex@gmail.com");
+        s.setFirst_name(null);
+        s.setLast_name("Gheorghe");
+        s.setUniversity_id(universityEntity);
+        s.setSection("Mec");
+        s.setSubjectList(subjectEntities);
 
 
-
-
-
-
+        try {
+            em.persist(s);
+            utx.commit();
+        } catch (ConstraintViolationException e) {
+            utx.rollback();
+            ConstraintViolation<?> constraint = e.getConstraintViolations().iterator().next();
+            String message=constraint.getMessage();
+            System.out.println("Invalid constraint violation for field: " + message);
+        }
+    }
 
 
 
@@ -110,6 +165,7 @@ public class StudentTest extends JPABaseTest {
         universityEntity.setCountry("Romania");
         universityEntity.setName("Politehnica");
 
+
         em.persist(universityEntity);
 
         List<SubjectEntity> subjectEntities = new ArrayList<>();
@@ -117,14 +173,14 @@ public class StudentTest extends JPABaseTest {
         subject.setName("Info");
         subjectEntities.add(subject);
 
-
         for (SubjectEntity sub : subjectEntities){
             em.persist(sub);
-    }
+        }
 
         List<StudentEntity> studentEntities = new ArrayList<>();
         StudentEntity student=new StudentEntity();
         student.setAddress(adressEmbeddableEntity);
+        student.setEmail("larisa.leucuta@yahoo.com");
         student.setFirst_name("Larisa");
         student.setLast_name("Leucuta");
         student.setUniversity_id(universityEntity);
@@ -135,6 +191,7 @@ public class StudentTest extends JPABaseTest {
 
         StudentEntity student1=new StudentEntity();
         student1.setAddress(adressEmbeddableEntity);
+        student1.setEmail("andrei@gmail.com");
         student1.setFirst_name("Andrei");
         student1.setLast_name("Astanei");
         student1.setUniversity_id(universityEntity);
@@ -145,7 +202,6 @@ public class StudentTest extends JPABaseTest {
         for(StudentEntity s:studentEntities) {
             em.persist(s);
         }
-
         utx.commit();
 
         em.clear();
@@ -155,6 +211,18 @@ public class StudentTest extends JPABaseTest {
     protected void internalClearData() {
         em.createQuery("delete from StudentEntity").executeUpdate();
     }
+
+
+    @Override
+    protected void startTransaction() {
+        // Multiple transactions needed
+    }
+
+    @Override
+    public void commitTransaction() {
+        // Don't commit non existent transaction
+    }
+
 }
 
 
