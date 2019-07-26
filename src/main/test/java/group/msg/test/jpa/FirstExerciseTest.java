@@ -27,7 +27,7 @@ import java.util.Set;
 import java.util.logging.Logger;
 
 @RunWith(Arquillian.class)
-public class ExerciseTest extends JPABaseTest {
+public class FirstExerciseTest extends JPABaseTest {
     private ValidatorFactory factory = Validation.buildDefaultValidatorFactory();
     private Validator validator = factory.getValidator();
 
@@ -56,7 +56,7 @@ public class ExerciseTest extends JPABaseTest {
         stud.setFirst_name("Popescu");
         stud.setLast_name("Ion");
 
-        EmbeddableAddressEntity address= new EmbeddableAddressEntity();
+        EmbeddableAddressEntity address = new EmbeddableAddressEntity();
         address.setCountry("Romania");
         address.setCity("Timisoara");
         address.setStreet("Torontalului");
@@ -100,7 +100,7 @@ public class ExerciseTest extends JPABaseTest {
         university.setName("Agronomie");
         university.setCountry("Romania");
 
-        EmbeddableAddressEntity address= new EmbeddableAddressEntity();
+        EmbeddableAddressEntity address = new EmbeddableAddressEntity();
         address.setCountry("Poland");
         address.setCity("Warsaw");
         address.setStreet("Streeeeeet");
@@ -133,7 +133,7 @@ public class ExerciseTest extends JPABaseTest {
         university.setCountry("Romania");
         bannedStudent.setUniversity(university);
 
-        EmbeddableAddressEntity address= new EmbeddableAddressEntity();
+        EmbeddableAddressEntity address = new EmbeddableAddressEntity();
         address.setCountry("Romania");
         address.setCity("Bucuresti");
         address.setStreet("Recunostintei");
@@ -152,7 +152,8 @@ public class ExerciseTest extends JPABaseTest {
     }
 
     @Override
-    protected void internalClearData() {em.createNativeQuery("delete from Students").executeUpdate();
+    protected void internalClearData() {
+        em.createNativeQuery("delete from Students").executeUpdate();
         em.createNativeQuery("delete from Universities").executeUpdate();
         em.createNativeQuery("delete from STUDENT_SUBJECT").executeUpdate();
     }

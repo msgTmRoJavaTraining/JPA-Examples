@@ -33,9 +33,15 @@ public class StudentEntity {
     @Embedded
     private EmbeddableAddressEntity address;
 
-    @ManyToMany
+    @ManyToMany(cascade = CascadeType.REMOVE)
     @JoinTable(name = "student_subject",
             joinColumns = @JoinColumn(name = "student_id"),
             inverseJoinColumns = @JoinColumn(name = "subject_id"))
     private List<SubjectEntity> subjects;
+
+    @OneToMany
+    @JoinTable(name = "student_grades",
+            joinColumns = @JoinColumn(name = "student_id"),
+            inverseJoinColumns = @JoinColumn(name = "grade_id"))
+    private List<GradeEntity> grades;
 }
