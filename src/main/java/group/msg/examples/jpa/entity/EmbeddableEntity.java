@@ -9,16 +9,17 @@ import javax.persistence.Embeddable;
 @Embeddable
 public class EmbeddableEntity {
 
-  @Column(name = "embed_1")
-  private String embeddableString;
+    @Column(name = "embed_1")
+    private String embeddableString;
 
 
-  private int embeddableInt;
+    private int embeddableInt;
 
-  public EmbeddableEntity() {}
+    public EmbeddableEntity() {
+    }
 
-  public EmbeddableEntity(String embStr, int embInt) {
-    embeddableString = embStr;
-    embeddableInt = embInt;
-  }
+    public EmbeddableEntity(String embStr, int embInt) {
+        embeddableString = embStr;
+        embeddableInt = embInt;
+    }
 }

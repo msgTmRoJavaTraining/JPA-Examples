@@ -10,6 +10,7 @@ import java.util.List;
 @Entity
 @Table(name = "Universities")
 public class UniversityEntity {
+
     @Id
     @GeneratedValue
     private String university_id;

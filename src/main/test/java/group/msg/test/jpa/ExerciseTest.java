@@ -1,5 +1,6 @@
 package group.msg.test.jpa;
 
+import group.msg.examples.jpa.entity.EmbeddableAddressEntity;
 import group.msg.examples.jpa.entity.StudentEntity;
 import group.msg.examples.jpa.entity.UniversityEntity;
 import org.jboss.arquillian.container.test.api.Deployment;
@@ -27,7 +28,8 @@ import java.util.logging.Logger;
 
 @RunWith(Arquillian.class)
 public class ExerciseTest extends JPABaseTest {
-    private static final int NUMBER_OF_ENTITIES = 5;
+    private ValidatorFactory factory = Validation.buildDefaultValidatorFactory();
+    private Validator validator = factory.getValidator();
 
     @Inject
     Logger logger;
@@ -53,6 +55,12 @@ public class ExerciseTest extends JPABaseTest {
         StudentEntity stud = new StudentEntity();
         stud.setFirst_name("Popescu");
         stud.setLast_name("Ion");
+
+        EmbeddableAddressEntity address= new EmbeddableAddressEntity();
+        address.setCountry("Romania");
+        address.setCity("Timisoara");
+        address.setStreet("Torontalului");
+        stud.setAddress(address);
         stud.setUniversity(univ);
 
 
@@ -73,23 +81,79 @@ public class ExerciseTest extends JPABaseTest {
 
     @Test
     public void breakingRulesTest() throws SystemException, HeuristicRollbackException, HeuristicMixedException, RollbackException {
-        UniversityEntity univ = new UniversityEntity();
-        univ.setName("UPT");
+        UniversityEntity noCountryUniversity = new UniversityEntity();
+        noCountryUniversity.setName("UVT");
 
-        ValidatorFactory factory = Validation.buildDefaultValidatorFactory();
-        Validator validator = factory.getValidator();
-        Set<ConstraintViolation<UniversityEntity>> violations = validator.validate(univ);
+        Set<ConstraintViolation<UniversityEntity>> violations = validator.validate(noCountryUniversity);
 
         for (ConstraintViolation<UniversityEntity> violation : violations) {
             logger.severe("Error: " + violation.getMessage());
         }
-        em.persist(univ);
+        em.persist(noCountryUniversity);
+        utx.commit();
+        em.clear();
+    }
+
+    @Test
+    public void AddStudentFromAnotherCityTest() throws SystemException, HeuristicRollbackException, HeuristicMixedException, RollbackException {
+        UniversityEntity university = new UniversityEntity();
+        university.setName("Agronomie");
+        university.setCountry("Romania");
+
+        EmbeddableAddressEntity address= new EmbeddableAddressEntity();
+        address.setCountry("Poland");
+        address.setCity("Warsaw");
+        address.setStreet("Streeeeeet");
+
+        StudentEntity student = new StudentEntity();
+        student.setFirst_name("Popescu");
+        student.setLast_name("Ion");
+        student.setUniversity(university);
+        student.setAddress(address);
+
+        Set<ConstraintViolation<StudentEntity>> violations = validator.validate(student);
+
+        for (ConstraintViolation<StudentEntity> violation : violations) {
+            logger.severe("Error: " + violation.getMessage());
+        }
+        em.persist(university);
+        em.persist(student);
+        utx.commit();
+        em.clear();
+    }
+
+    @Test
+    public void AddBannedStudentTest() throws SystemException, HeuristicRollbackException, HeuristicMixedException, RollbackException {
+        StudentEntity bannedStudent = new StudentEntity();
+        bannedStudent.setFirst_name("Stifler");
+        bannedStudent.setLast_name("Ion");
+
+        UniversityEntity university = new UniversityEntity();
+        university.setName("BEST ONE");
+        university.setCountry("Romania");
+        bannedStudent.setUniversity(university);
+
+        EmbeddableAddressEntity address= new EmbeddableAddressEntity();
+        address.setCountry("Romania");
+        address.setCity("Bucuresti");
+        address.setStreet("Recunostintei");
+
+        bannedStudent.setAddress(address);
+
+        Set<ConstraintViolation<StudentEntity>> violations = validator.validate(bannedStudent);
+
+        for (ConstraintViolation<StudentEntity> violation : violations) {
+            logger.severe("Error: " + violation.getMessage());
+        }
+        em.persist(bannedStudent);
+        em.persist(address);
         utx.commit();
         em.clear();
     }
 
     @Override
-    protected void internalClearData() {
+    protected void internalClearData() {em.createNativeQuery("delete from Students").executeUpdate();
         em.createNativeQuery("delete from Universities").executeUpdate();
+        em.createNativeQuery("delete from STUDENT_SUBJECT").executeUpdate();
     }
 }
