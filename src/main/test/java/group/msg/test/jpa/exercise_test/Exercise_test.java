@@ -16,25 +16,19 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 
 
-import javax.persistence.EntityManager;
+
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.PersistenceUnit;
 import javax.persistence.Query;
-import javax.validation.ConstraintViolation;
-import javax.validation.ConstraintViolationException;
 
 import java.util.ArrayList;
-
-import java.util.Date;
 import java.util.List;
-import java.util.Objects;
+
 
 @RunWith(Arquillian.class)
 public class Exercise_test extends JPABaseTest {
     private static final int NUMBER_OF_ENTITIES = 5;
 
-    @PersistenceUnit(unitName = "test")
-    private EntityManagerFactory emf;
 
     @Deployment
     public static WebArchive createDeployment() {
@@ -83,7 +77,7 @@ public class Exercise_test extends JPABaseTest {
 
         stud.setLastName("Maria");
         stud.setFirstName("SSS");
-        stud.setAddress(new Address("somewhere1","city1", "country1"));
+        stud.setAddress(new Address("somewhere1","city1", "country"));
         stud.setUniversity(u1);
         stud.setSubjects(sub2);
         stud.setEmail("maria@e-uvt.ro");
@@ -108,7 +102,7 @@ public class Exercise_test extends JPABaseTest {
             } else {
                 s.setLastName("Mihai"+ i);
                 s.setFirstName("Xulescu");
-                s.setAddress(new Address("somewhere2","city2", "country2"));
+                s.setAddress(new Address("somewhere2","city2", "OtherCountry"));
                 s.setUniversity(u2);
                 s.setSubjects(sub2);
                 s.setEmail("mihai" + i+ "@e-uvt.ro");
@@ -122,6 +116,9 @@ public class Exercise_test extends JPABaseTest {
     }
    @Override
     protected void internalClearData() {
-        em.createQuery("delete from Student").executeUpdate();
+        em.createNativeQuery("delete from STUDENT").executeUpdate();
+       em.createNativeQuery("delete from SUBJECT_ENTITY").executeUpdate();
+       em.createNativeQuery("delete from UNIVERSITY_ENTITY").executeUpdate();
+       em.createNativeQuery("delete from STUDENT_SUBJECT").executeUpdate();
     }
 }

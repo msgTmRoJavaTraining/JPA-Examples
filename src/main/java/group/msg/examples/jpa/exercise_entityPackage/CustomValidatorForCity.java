@@ -4,12 +4,12 @@ import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
 
 
-public class CustomValidatorForCity  implements ConstraintValidator<CustomNameValidation, Student> {
+public class CustomValidatorForCity  implements ConstraintValidator<CustomCityValidation, Student> {
 
     private boolean includeHardCodedValue;
 
     @Override
-    public void initialize(CustomNameValidation validation) {
+    public void initialize(CustomCityValidation validation) {
         includeHardCodedValue = validation.includeHardCodedValue();
     }
 
@@ -17,7 +17,7 @@ public class CustomValidatorForCity  implements ConstraintValidator<CustomNameVa
     public boolean isValid(Student student, ConstraintValidatorContext validatorContext) {
         Address adr = student.getAddress();
         University uni = student.getUniversity();
-        if(adr.getCountry().equals(uni.getCountry())){
+        if(adr!= null && adr.getCountry().equals(uni.getCountry())){
             includeHardCodedValue= true;
         }else{
             includeHardCodedValue= false;

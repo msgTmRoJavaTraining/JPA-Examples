@@ -9,11 +9,11 @@ import static java.lang.annotation.ElementType.FIELD;
 import static java.lang.annotation.ElementType.TYPE;
 import static java.lang.annotation.RetentionPolicy.RUNTIME;
 
-@Constraint(validatedBy = CustomValidatorForStudentNames.class)
+@Constraint(validatedBy = CustomValidatorForCity.class)
 @Target({TYPE})
 @Retention(RUNTIME)
 public @interface CustomCityValidation {
-    String message() default "Custom validation for city did not pass!";
+    String message() default "Custom validation for country did not pass!";
 
     Class<?>[] groups() default {};
 

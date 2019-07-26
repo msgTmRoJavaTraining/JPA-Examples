@@ -14,7 +14,7 @@ import static java.lang.annotation.RetentionPolicy.RUNTIME;
 @Target({FIELD})
 @Retention(RUNTIME)
 public @interface CustomNameValidation {
-    String message() default "Custom validation did not pass!";
+    String message() default "Custom validation for first name did not pass!";
 
     Class<?>[] groups() default {};
 

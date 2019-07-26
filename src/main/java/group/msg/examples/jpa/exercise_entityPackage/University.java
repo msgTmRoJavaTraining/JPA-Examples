@@ -1,6 +1,4 @@
 package group.msg.examples.jpa.exercise_entityPackage;
-
-import group.msg.examples.jpa.entity.mapping.OneEntity;
 import lombok.Data;
 
 import javax.persistence.*;

@@ -1,5 +1,6 @@
 package group.msg.test.jpa;
 
+import com.sun.xml.ws.api.tx.at.Transactional;
 import org.junit.After;
 import org.junit.Before;
 
@@ -46,6 +47,11 @@ public abstract class JPABaseTest {
 
   @After
   public void commitTransaction() throws Exception {
-    utx.commit();
+    try{
+      utx.commit();
+    }catch (Exception e ){
+      utx.rollback();
+    }
+
   }
 }

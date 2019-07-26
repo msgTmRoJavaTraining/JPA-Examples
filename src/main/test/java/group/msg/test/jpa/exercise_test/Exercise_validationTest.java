@@ -2,6 +2,8 @@ package group.msg.test.jpa.exercise_test;
 
 import group.msg.examples.jpa.exercise_entityPackage.Address;
 import group.msg.examples.jpa.exercise_entityPackage.Student;
+import group.msg.examples.jpa.exercise_entityPackage.Subject;
+import group.msg.examples.jpa.exercise_entityPackage.University;
 import group.msg.test.jpa.JPABaseTest;
 import org.jboss.arquillian.container.test.api.Deployment;
 import org.jboss.arquillian.junit.Arquillian;
@@ -15,6 +17,8 @@ import javax.persistence.EntityManagerFactory;
 import javax.persistence.PersistenceUnit;
 import javax.validation.ConstraintViolation;
 import javax.validation.ConstraintViolationException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
 @RunWith(Arquillian.class)
@@ -31,14 +35,70 @@ public class Exercise_validationTest extends JPABaseTest {
     }
 
     @Test
-    public void testUpdate() throws Exception {
-        validatePersistenceStudent(49, "street", "city", "country",
-                "someone", "someone1", "firstLastName@gmail.com");
-//        validatePersistenceStudent(49, "street", null, null,
-//                null, "hello", "validation@gmail.com");
+    public void testValidationForFields() throws Exception {
+        University u1 = new University();
+        University u2 = new University();
+        List<Subject> sub = new ArrayList<>();
+        List<Subject> sub2 = new ArrayList<>();
+        Subject s1 = new Subject();
+        Subject s2 = new Subject();
+        Subject s3 = new Subject();
+        Address adr2= null;
+        s1.setName("sub1");
+        s1.setSubject_id(1);
+        s2.setName("sub2");
+        s2.setSubject_id(2);
+        s3.setName("sub3");
+        s3.setSubject_id(3);
+
+        sub.add(s1);
+        sub.add(s2);
+        sub2.add(s3);
+        sub2.add(s1);
+        u1.setName("UVT");
+        u1.setUniversity_id(12);
+        u1.setCountry("country");
+        u2.setName("UPT");
+        u2.setUniversity_id(13);
+        u2.setCountry("OtherCountry");
+        validateEntry(49, adr2,"hello", "hi", "firstLastName@gmail.com",u1,sub2);
+        validateEntry(49, adr2,"someone", "hi", "firstLastName@gmail.com",u1,sub2);
     }
-    private void validatePersistenceStudent(int id, String street, String city, String country, String firstname,String lastname,
-                                            String email) throws Exception {
+
+    @Test
+    public void testValidationForCountry() throws Exception {
+        University u1 = new University();
+        University u2 = new University();
+        List<Subject> sub = new ArrayList<>();
+        List<Subject> sub2 = new ArrayList<>();
+        Subject s1 = new Subject();
+        Subject s2 = new Subject();
+        Subject s3 = new Subject();
+        Address adr= new Address("somewhere","city", "OtherCountry");
+        s1.setName("sub1");
+        s1.setSubject_id(1);
+        s2.setName("sub2");
+        s2.setSubject_id(2);
+        s3.setName("sub3");
+        s3.setSubject_id(3);
+
+        sub.add(s1);
+        sub.add(s2);
+        sub2.add(s3);
+        sub2.add(s1);
+
+        u1.setName("UVT");
+        u1.setUniversity_id(12);
+        u1.setCountry("country");
+        u2.setName("UPT");
+        u2.setUniversity_id(13);
+        u2.setCountry("OtherCountry");
+        validateEntry(49,adr,"hello", "hi", "firstLastName@gmail.com",u2,sub);
+        validateEntry(49, adr,"test", null, "validate",u1,sub2);
+    }
+
+    private void validateEntry(int id, Address adr, String firstname, String lastname,
+                               String email, University uni, List<Subject> subjectList) throws Exception {
 
         System.out.println("Validating student with first name: " + firstname);
         EntityManager entityManager = emf.createEntityManager();
@@ -48,8 +108,10 @@ public class Exercise_validationTest extends JPABaseTest {
         Student student = new Student();
         student.setLastName(lastname);
         student.setFirstName(firstname);
-        student.setAddress(new Address(street, city, country));
+        student.setAddress(adr);
         student.setEmail(email);
+        student.setUniversity(uni);
+        student.setSubjects(subjectList);
 
         try {
             entityManager.persist(student);
@@ -58,11 +120,13 @@ public class Exercise_validationTest extends JPABaseTest {
             utx.rollback();
             ConstraintViolation<?> constraint = e.getConstraintViolations().iterator().next();
             javax.validation.Path propertyPath = constraint.getPropertyPath();
-            if (!Objects.equals(firstname, propertyPath.toString()) || !Objects.equals(lastname, propertyPath.toString()) || !Objects.equals(email, propertyPath.toString()) || !Objects.equals(street, propertyPath.toString()) || !Objects.equals(city, propertyPath.toString()) || !Objects.equals(country, propertyPath.toString())) {
-                //System.out.println("Invalid constraint violation for field: " + propertyPath);
-                 System.out.println(constraint.getMessage());
+            if (!Objects.equals(firstname, propertyPath.toString()) || !Objects.equals(lastname, propertyPath.toString()) ||  !Objects.equals(adr.getStreet(), propertyPath.toString()) || !Objects.equals(adr.getCity(), propertyPath.toString()) || !Objects.equals(adr.getCountry(), propertyPath.toString())) {
+                System.out.println("Invalid constraint violation for field: " + propertyPath);
+                System.out.println(constraint.getMessage());
 
             }
+        }catch (Exception e){
+            e.printStackTrace();
         }
     }
 

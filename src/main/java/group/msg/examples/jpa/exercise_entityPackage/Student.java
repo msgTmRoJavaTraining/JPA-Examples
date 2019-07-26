@@ -1,5 +1,4 @@
 package group.msg.examples.jpa.exercise_entityPackage;
-import group.msg.examples.jpa.validator.CustomValidation;
 import lombok.Data;
 
 import javax.persistence.*;
@@ -31,11 +30,11 @@ public class Student implements Serializable{
         @Email(message="E-mail is not valid")
         private String email;
 
-        @ManyToOne
+        @ManyToOne(cascade= CascadeType.PERSIST)
         @JoinColumn(name = "university_id")
         private University university;
 
-        @ManyToMany
+        @ManyToMany(cascade= CascadeType.PERSIST)
         @JoinTable(name = "student_subject",
                 joinColumns = @JoinColumn(name = "student_id"),
                 inverseJoinColumns = @JoinColumn(name = "subject_id"))

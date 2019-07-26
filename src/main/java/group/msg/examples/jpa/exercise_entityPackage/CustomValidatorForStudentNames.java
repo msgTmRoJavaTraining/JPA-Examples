@@ -1,8 +1,4 @@
 package group.msg.examples.jpa.exercise_entityPackage;
-
-import group.msg.examples.jpa.validator.CustomValidation;
-
-import javax.swing.plaf.synth.SynthTableUI;
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
 import java.util.ArrayList;
