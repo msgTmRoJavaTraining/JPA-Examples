@@ -57,9 +57,11 @@ public class StudentCRUDTest extends JPABaseTest {
     }
 
     @Test
-    public void deleteStudentyEntityTest() {
+    public void deleteStudentyEntityTest() throws SystemException, NotSupportedException {
         System.out.println("Deleting Caravan Mihai from database...");
 
+        utx.begin();
+        em.joinTransaction();
         StudentEntity studentEntity = em.find(StudentEntity.class, 51);
         em.remove(studentEntity);
     }
