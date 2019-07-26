@@ -30,6 +30,10 @@ public class StudentEntity implements Serializable {
     @JoinColumn(name = "one_university")
     private UniversityEntity university_id;
 
+    @OneToMany(cascade= CascadeType.REMOVE)
+    @JoinColumn(name = "grade")
+    private Collection<GradeEntity> grade;
+
     @NotNull
     @Column(name = "first_name")
     @CustomForName

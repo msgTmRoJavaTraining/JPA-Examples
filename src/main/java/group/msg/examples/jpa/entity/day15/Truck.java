@@ -11,8 +11,6 @@ import javax.persistence.*;
 @Entity
 @Table(name = "truck")
 
-
-
 public  class Truck extends Vehicle {
 
     @Column(name = "loadCapacity")

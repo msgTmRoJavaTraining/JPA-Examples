@@ -1,10 +1,7 @@
 package group.msg.test.jpa.day14;
 
 
-import group.msg.examples.jpa.entity.day14.AdressEmbeddableEntity;
-import group.msg.examples.jpa.entity.day14.StudentEntity;
-import group.msg.examples.jpa.entity.day14.SubjectEntity;
-import group.msg.examples.jpa.entity.day14.UniversityEntity;
+import group.msg.examples.jpa.entity.day14.*;
 import group.msg.examples.jpa.validator.ValidationEntity;
 import group.msg.test.jpa.JPABaseTest;
 import org.jboss.arquillian.container.test.api.Deployment;
@@ -19,6 +16,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.PersistenceUnit;
 import javax.persistence.Query;
+import javax.transaction.*;
 import javax.validation.ConstraintViolation;
 import javax.validation.ConstraintViolationException;
 import javax.xml.ws.soap.Addressing;
@@ -51,9 +49,14 @@ public class StudentTest extends JPABaseTest {
     }
 
     @Test
-    public void deleteStudentEntity(){
-        StudentEntity studentEntity=em.find(StudentEntity.class,20);
+    public void deleteStudentEntity() throws SystemException, NotSupportedException, HeuristicRollbackException, HeuristicMixedException, RollbackException {
+        utx.begin();
+        em.joinTransaction();
+        StudentEntity studentEntity=em.find(StudentEntity.class,50);
         em.remove(studentEntity);
+        utx.commit();
+
+        em.clear();
     }
 
     @Test
@@ -70,7 +73,6 @@ public class StudentTest extends JPABaseTest {
         universityEntity.setName("Poli");
 
         em.persist(universityEntity);
-
 
         List<SubjectEntity> subjectEntities = new ArrayList<>();
         SubjectEntity subject = new SubjectEntity();
@@ -165,17 +167,26 @@ public class StudentTest extends JPABaseTest {
         universityEntity.setCountry("Romania");
         universityEntity.setName("Politehnica");
 
-
         em.persist(universityEntity);
+
+        List<GradeEntity>grades=new ArrayList<>();
+        GradeEntity grade=new GradeEntity();
+        grade.setGrade(10);
+        grades.add(grade);
+        for(GradeEntity g:grades) {
+            em.persist(g);
+        }
 
         List<SubjectEntity> subjectEntities = new ArrayList<>();
         SubjectEntity subject = new SubjectEntity();
         subject.setName("Info");
+        subject.setGrade(grade);
         subjectEntities.add(subject);
 
         for (SubjectEntity sub : subjectEntities){
             em.persist(sub);
         }
+
 
         List<StudentEntity> studentEntities = new ArrayList<>();
         StudentEntity student=new StudentEntity();
@@ -186,7 +197,8 @@ public class StudentTest extends JPABaseTest {
         student.setUniversity_id(universityEntity);
         student.setSection("Mate");
         student.setSubjectList(subjectEntities);
-        student.setId(20);
+        student.setId(50);
+        student.setGrade(grades);
         studentEntities.add(student);
 
         StudentEntity student1=new StudentEntity();
@@ -196,12 +208,14 @@ public class StudentTest extends JPABaseTest {
         student1.setLast_name("Astanei");
         student1.setUniversity_id(universityEntity);
         student1.setSection("Mate");
+        student.setGrade(grades);
         student1.setSubjectList(subjectEntities);
         studentEntities.add(student1);
 
         for(StudentEntity s:studentEntities) {
             em.persist(s);
         }
+
         utx.commit();
 
         em.clear();

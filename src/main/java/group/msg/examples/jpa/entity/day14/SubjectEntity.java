@@ -16,6 +16,10 @@ public class SubjectEntity {
     @GeneratedValue
     private int id;
 
+    @OneToOne
+    @JoinColumn(name="grade")
+    private GradeEntity grade;
+
     @Version
     private long version;
 
