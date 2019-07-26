@@ -86,8 +86,6 @@ public class StudentTest extends JPABaseTest
         em.clear();
 
 
-
-
     }
 
     @Test
@@ -105,11 +103,12 @@ public class StudentTest extends JPABaseTest
     }
 
     @Test
-    public void testCreateSimpleEntity() {
+    public void testCreateSimpleEntity()
+    {
         System.out.println("Checking number of created entities...");
 
         Query q = em.createNativeQuery("select * from SUBJECT",Subject.class);
         List<Subject> subTest =q.getResultList();
         Assert.assertEquals("Entities not found in the database!", 2, subTest.size());
-     }
+    }
 }

@@ -65,6 +65,7 @@ public class ValidationEntityTest extends JPABaseTest {
 
   private void validatePersistenceObject(String name, String email, int salary, Date birthday, Date endDate, int noHardCodedValidation, int
           hardCodedValidation, String validationField) throws Exception {
+
     System.out.println("Validating entity with name: " + name);
     EntityManager entityManager = emf.createEntityManager();
     utx.begin();
@@ -89,6 +90,7 @@ public class ValidationEntityTest extends JPABaseTest {
       if (!Objects.equals(validationField, propertyPath.toString())) {
         throw new IllegalArgumentException("Invalid constraint violation for field: " + propertyPath);
       }
+
     }
   }
 

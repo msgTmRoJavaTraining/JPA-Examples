@@ -1,6 +1,8 @@
 package group.msg.examples.jpa.entity;
 
+import group.msg.examples.jpa.validator.MyCustomValidator;
 import lombok.Data;
+
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.io.Serializable;
@@ -23,7 +25,9 @@ public class StudentEntity implements Serializable
     @Embedded
     private HomeAddress homeAddress;
 
+    @MyCustomValidator
     private String first_name;
+
     private String last_name;
     private String section;
 
