@@ -1,4 +1,4 @@
-package group.msg.exercises.entities.jpa_second_day;
+package group.msg.exercises.secondDay;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -10,12 +10,12 @@ import javax.persistence.Table;
 
 @Entity
 @Table
-@PrimaryKeyJoinColumn(name="ID")
+@PrimaryKeyJoinColumn
+@Data
 @AllArgsConstructor
 @NoArgsConstructor
-@Data
-public class Truck extends Vehicle {
+public class Bike extends Vehicle {
 
-    private int loadCapacity;
-    private int numberOfContainers;
+    private int saddleHeight;
+    private int noOfPassengers;
 }

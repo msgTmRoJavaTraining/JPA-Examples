@@ -1,6 +1,5 @@
 package group.msg.test.jpa.exerciseTest;
 
-
 import group.msg.examples.jpa.entity.SimpleEntity;
 import group.msg.examples.jpa.entity.SimpleType;
 import group.msg.exercises.entities.*;
@@ -19,7 +18,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @RunWith(Arquillian.class)
-public class TestWithGrades extends JPABaseTest {
+public class TesttStudent extends JPABaseTest {
 
     private static final int NUMBER_OF_ENTITIES = 5;
 
@@ -33,11 +32,13 @@ public class TestWithGrades extends JPABaseTest {
 
 
 
+
     @Test
     public void testCreate() {
         System.out.println("Checking number of created entities...");
 
-        Query q = em.createNativeQuery("delete * from student");
+        Query q = em.createNativeQuery("select * from STUDENT");
+        
 
     }
 
@@ -61,29 +62,32 @@ public class TestWithGrades extends JPABaseTest {
 
         University university = new University();
 
+        university.setName("Poli");
+        university.setCountry("Timisoara");
+        university.setStudent_list(myList);
+
         Grades grade1 = new Grades();
         grade1.setValue(10);
 
         Grades grade2 = new Grades();
         grade2.setValue(9);
 
-        List<Grades> gradeList = new ArrayList<>();
-        gradeList.add(grade1);
-        gradeList.add(grade2);
+        List<Grades> myGrades = new ArrayList<>();
+        s1.setGrades(myGrades);
+
+
+
 
         s1.setFirst_name("Ion");
         s1.setLast_name("Gheorghe");
         s1.setSection("math");
         s1.setAdress(a1);
-        s1.setUniversity_id(university);
-        s1.setGrades(gradeList);
 
+        s2.setFirst_name("Ion");
+        s2.setLast_name("Gheorghe");
+        s2.setSection("math");
+        s2.setAdress(a1);
 
-        s2.setFirst_name("Gheorghe");
-        s2.setLast_name("Ion");
-        s2.setSection("other");
-        s2.setAdress(a2);
-        s2.setUniversity_id(university);
 
 
 
@@ -91,12 +95,8 @@ public class TestWithGrades extends JPABaseTest {
         sub1.setManyToManyStudent(myList);
 
 
-        sub2.setName("sub2");
-        sub2.setManyToManyStudent(myList);
 
 
-        university.setCountry("romania");
-        university.setName("po;o");
 
 
         em.persist(s1);

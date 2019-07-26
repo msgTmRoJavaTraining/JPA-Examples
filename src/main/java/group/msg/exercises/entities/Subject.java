@@ -19,7 +19,8 @@ public class Subject {
     @GeneratedValue
     private int subject_id;
     private String name;
-
+    @OneToOne
+    private  Grades grade;
 
 
     @ManyToMany
@@ -30,5 +31,4 @@ public class Subject {
 
 
 
-    }
-
+}

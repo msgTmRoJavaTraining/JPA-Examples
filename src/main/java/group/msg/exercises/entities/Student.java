@@ -1,5 +1,7 @@
 package group.msg.exercises.entities;
 
+
+
 import group.msg.examples.jpa.entity.mapping.OneEntity;
 import lombok.Data;
 
@@ -17,7 +19,7 @@ public class Student {
     private int student_id;
 
     @Embedded
-    @NotNull
+
     private Adress adress;
 
     @ManyToOne
@@ -25,10 +27,10 @@ public class Student {
 
     @OneToMany(cascade=CascadeType.REMOVE)
     private List<Grades> grades;
-    @NotNull
+
     private String first_name;
 
-    @NotNull
+
     private String last_name;
     private String section;
 

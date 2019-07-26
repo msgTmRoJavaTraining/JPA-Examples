@@ -18,7 +18,7 @@ public class University {
     @OneToMany(targetEntity=Student.class)
     private List<Student> student_list;
 
-   @NotNull
+
     private String name;
     private String country;
 

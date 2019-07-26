@@ -1,5 +1,4 @@
-package group.msg.exercises.entities.jpa_second_day;
-
+package group.msg.exercises.secondDay;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -15,8 +14,8 @@ import javax.persistence.Table;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class Bike extends Vehicle {
+public class Car extends Vehicle {
 
-    private int saddleHeight;
-    private int noOfPassengers;
+    private int noOfPassenger;
+    private int noOfDoors;
 }

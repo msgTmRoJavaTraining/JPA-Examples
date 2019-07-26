@@ -1,5 +1,6 @@
 package group.msg.exercises.entities;
 
+
 import lombok.Data;
 
 import javax.persistence.Embeddable;
@@ -13,11 +14,11 @@ import javax.validation.constraints.NotNull;
 public class Adress {
 
     private int adress_id;
-    @NotNull
+
     private String street;
-    @NotNull
+
     private String city;
-    @NotNull
+
     private String country;
 
 
@@ -35,3 +36,4 @@ public class Adress {
 
 
 }
+

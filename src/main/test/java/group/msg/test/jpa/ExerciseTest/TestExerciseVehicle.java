@@ -1,14 +1,14 @@
-package group.msg.test.jpa.exerciseTest;
-
+package group.msg.test.jpa.ExerciseTest;
 
 import group.msg.exercises.entities.Adress;
 import group.msg.exercises.entities.Student;
 import group.msg.exercises.entities.Subject;
 import group.msg.exercises.entities.University;
-import group.msg.exercises.entities.jpa_second_day.Bike;
-import group.msg.exercises.entities.jpa_second_day.Car;
-import group.msg.exercises.entities.jpa_second_day.Truck;
-import group.msg.exercises.entities.jpa_second_day.Vehicle;
+
+import group.msg.exercises.secondDay.Bike;
+import group.msg.exercises.secondDay.Car;
+import group.msg.exercises.secondDay.Truck;
+import group.msg.exercises.secondDay.Vehicle;
 import group.msg.test.jpa.JPABaseTest;
 import org.jboss.arquillian.container.test.api.Deployment;
 import org.jboss.arquillian.junit.Arquillian;
@@ -22,7 +22,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @RunWith(Arquillian.class)
-public class TestVehicleExercise extends JPABaseTest {
+public class TestExerciseVehicle extends JPABaseTest {
 
     private static final int NUMBER_OF_ENTITIES = 5;
 
@@ -38,7 +38,7 @@ public class TestVehicleExercise extends JPABaseTest {
     public void testCreateSimpleEntity() {
         System.out.println("Checking number of created entities...");
 
-        Query q = em.createNativeQuery("select * from UNIVERSITY");
+        Query q = em.createNativeQuery("select * from vehicle");
 
     }
 

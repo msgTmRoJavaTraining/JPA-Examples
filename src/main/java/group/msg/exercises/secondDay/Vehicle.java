@@ -1,5 +1,4 @@
-package group.msg.exercises.entities.jpa_second_day;
-
+package group.msg.exercises.secondDay;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
