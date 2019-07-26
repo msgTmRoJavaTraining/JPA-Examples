@@ -1,11 +1,9 @@
 package group.msg.test.jpa.exerciseTest;
 
+
 import group.msg.examples.jpa.entity.SimpleEntity;
 import group.msg.examples.jpa.entity.SimpleType;
-import group.msg.exercises.entities.Adress;
-import group.msg.exercises.entities.Student;
-import group.msg.exercises.entities.Subject;
-import group.msg.exercises.entities.University;
+import group.msg.exercises.entities.*;
 import group.msg.test.jpa.JPABaseTest;
 import org.jboss.arquillian.container.test.api.Deployment;
 import org.jboss.arquillian.junit.Arquillian;
@@ -21,7 +19,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @RunWith(Arquillian.class)
-public class SchemaGeneratorExercises extends JPABaseTest {
+public class TestWithGrades extends JPABaseTest {
 
     private static final int NUMBER_OF_ENTITIES = 5;
 
@@ -33,13 +31,6 @@ public class SchemaGeneratorExercises extends JPABaseTest {
                 .addAsResource("../classes/META-INF/beans.xml", "META-INF/beans.xml");
     }
 
-    @Test
-    public void testCreateSimpleEntity() {
-        System.out.println("Checking number of created entities...");
-
-        Query q = em.createNativeQuery("select * from university");
-
-    }
 
 
     @Test
@@ -70,13 +61,22 @@ public class SchemaGeneratorExercises extends JPABaseTest {
 
         University university = new University();
 
+        Grades grade1 = new Grades();
+        grade1.setValue(10);
+
+        Grades grade2 = new Grades();
+        grade2.setValue(9);
+
+        List<Grades> gradeList = new ArrayList<>();
+        gradeList.add(grade1);
+        gradeList.add(grade2);
 
         s1.setFirst_name("Ion");
         s1.setLast_name("Gheorghe");
         s1.setSection("math");
         s1.setAdress(a1);
         s1.setUniversity_id(university);
-
+        s1.setGrades(gradeList);
 
 
         s2.setFirst_name("Gheorghe");
@@ -99,7 +99,7 @@ public class SchemaGeneratorExercises extends JPABaseTest {
         university.setName("po;o");
 
 
-        em.persist(university);
+        em.persist(s1);
         utx.commit();
         em.clear();
 

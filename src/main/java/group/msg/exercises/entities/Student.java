@@ -6,6 +6,7 @@ import lombok.Data;
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.util.Collection;
+import java.util.List;
 
 @Entity
 @Table
@@ -22,6 +23,8 @@ public class Student {
     @ManyToOne
     private University university_id;
 
+    @OneToMany(cascade=CascadeType.REMOVE)
+    private List<Grades> grades;
     @NotNull
     private String first_name;
 
