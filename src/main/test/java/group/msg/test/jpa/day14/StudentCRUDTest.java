@@ -5,6 +5,7 @@ import group.msg.examples.jpa.entity.day14.StudentEntity;
 import group.msg.examples.jpa.entity.day14.SubjectEntity;
 import group.msg.examples.jpa.entity.day14.UniversityEntity;
 import group.msg.test.jpa.JPABaseTest;
+import org.hibernate.validator.internal.constraintvalidators.bv.NotNullValidator;
 import org.jboss.arquillian.container.test.api.Deployment;
 import org.jboss.arquillian.junit.Arquillian;
 import org.jboss.shrinkwrap.api.ShrinkWrap;
@@ -19,6 +20,7 @@ import javax.persistence.Query;
 import javax.transaction.*;
 import javax.validation.ConstraintViolation;
 import javax.validation.ConstraintViolationException;
+import javax.validation.constraints.NotNull;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -63,6 +65,52 @@ public class StudentCRUDTest extends JPABaseTest {
     }
 
     @Test
+    public void customStudentUniversityCountryValidation() throws SystemException, NotSupportedException {
+        System.out.println("Running Second Validation Test");
+
+        UniversityEntity university = new UniversityEntity();
+        university.setName("Universitatea Politehnica Timisoara");
+        university.setCountry("Coralium");
+
+        AddressEntity address = new AddressEntity();
+        address.setCountry("Romania");
+        address.setCity("Timisoara");
+        address.setStreet("Aleea Studentilor Caminul 14C");
+
+        SubjectEntity subject = new SubjectEntity();
+        subject.setName("Inteligenta Artificiala In Impas");
+
+        StudentEntity student = new StudentEntity();
+        student.setFirst_name("Bianca");
+        student.setLast_name("Hisigan");
+        student.setHome_address(address);
+        student.setUniversity_id(university);
+        student.setSection("Informatica");
+        student.setEmail("biancahisigan@gmail.com");
+
+        subject.setManyToMany(Collections.singletonList(student));
+
+        utx.begin();
+        em.joinTransaction();
+
+        try {
+            em.persist(university);
+            em.persist(student);
+            em.persist(subject);
+
+            utx.commit();
+        } catch (ConstraintViolationException e) {
+            utx.rollback();
+            ConstraintViolation<?> constraint = e.getConstraintViolations().iterator().next();
+            String nameValidationMessage = constraint.getMessage();
+
+            logger.info("Mesajul de eroare la validarea tarii este: " + nameValidationMessage);
+        } catch (HeuristicMixedException | HeuristicRollbackException | RollbackException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Test
     public void customStudentNameValidation() throws SystemException, NotSupportedException {
         System.out.println("Running First Validation Test");
 
@@ -79,7 +127,7 @@ public class StudentCRUDTest extends JPABaseTest {
         subject.setName("Fizica Cuantica");
 
         StudentEntity student = new StudentEntity();
-        student.setFirst_name("Bogdan@");
+        student.setFirst_name("Bogdan^*1");
         student.setLast_name("Marasan");
         student.setHome_address(address);
         student.setUniversity_id(university);
@@ -103,11 +151,9 @@ public class StudentCRUDTest extends JPABaseTest {
             String nameValidationMessage = constraint.getMessage();
 
             logger.info("Mesajul de eroare la validarea numelui este: " + nameValidationMessage);
-
         } catch (HeuristicMixedException | HeuristicRollbackException | RollbackException e) {
             e.printStackTrace();
         }
-        //em.clear();
     }
 
     @Override
@@ -120,8 +166,6 @@ public class StudentCRUDTest extends JPABaseTest {
         UniversityEntity university = new UniversityEntity();
         university.setName("Universitatea Politehnica Timisoara");
         university.setCountry("Romania");
-
-        em.persist(university);
 
         // *** Lista Adrese ***
         List<AddressEntity> addresses = new ArrayList<>();
@@ -166,15 +210,30 @@ public class StudentCRUDTest extends JPABaseTest {
 
         subjects.get(0).setManyToMany(students);
 
-        for(SubjectEntity subjectEntity : subjects) {
-            em.persist(subjectEntity);
+
+
+        try {
+            em.persist(university);
+
+            for(SubjectEntity subjectEntity : subjects) {
+                em.persist(subjectEntity);
+            }
+
+            for(StudentEntity s : students) {
+                em.persist(s);
+            }
+
+            utx.commit();
+        } catch (ConstraintViolationException e) {
+            utx.rollback();
+            ConstraintViolation<?> constraint = e.getConstraintViolations().iterator().next();
+            String nameValidationMessage = constraint.getMessage();
+
+            logger.info("Mesajul de eroare la validarea numelui este: " + nameValidationMessage);
+        } catch (HeuristicMixedException | HeuristicRollbackException | RollbackException e) {
+            e.printStackTrace();
         }
 
-        for(StudentEntity s : students) {
-            em.persist(s);
-        }
-
-        utx.commit();
         em.clear();
     }
 
