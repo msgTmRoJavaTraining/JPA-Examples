@@ -1,10 +1,7 @@
 package group.msg.test.jpa.schema;
 
 import group.msg.examples.jpa.entity.SimpleEntity;
-import group.msg.exercise.Address;
-import group.msg.exercise.Student;
-import group.msg.exercise.Subject;
-import group.msg.exercise.University;
+import group.msg.exercise.*;
 import group.msg.test.jpa.JPABaseTest;
 import org.jboss.arquillian.container.test.api.Deployment;
 import org.jboss.arquillian.junit.Arquillian;
@@ -35,6 +32,7 @@ public class ExerciseTest extends JPABaseTest {
         em.createQuery("delete from Student ").executeUpdate();
         em.createQuery("delete from Subject ").executeUpdate();
         em.createQuery("delete from University ").executeUpdate();
+        em.createQuery("delete from Grade ").executeUpdate();
     }
 
     @Override
@@ -84,7 +82,10 @@ public class ExerciseTest extends JPABaseTest {
             students.add(stud1);
             students.add(stud2);
             students.add(stud3);
-
+        Grade grades=new Grade();
+            grades.setGrd(8.3);
+            grades.setSubj(subj1);
+            grades.setStudent(stud2);
 
         for (Student s:students) {
             em.persist(s);
@@ -93,6 +94,7 @@ public class ExerciseTest extends JPABaseTest {
             em.persist(s);
         }
 
+        em.persist(grades);
         em.persist(uni1);
         utx.commit();
         em.clear();
@@ -124,6 +126,11 @@ public class ExerciseTest extends JPABaseTest {
 
 
             em.persist(toAdd);
+    }
+    @Test
+    public void testCascade(){
+        em.remove(em.find(Student.class,2));
+
     }
 }
 

@@ -28,6 +28,9 @@ public class Student {
     private String lastName;
     private String section;
 
+    @OneToMany(cascade = CascadeType.REMOVE)
+    private List <Grade>grades;
+
 
 
         @ManyToMany
