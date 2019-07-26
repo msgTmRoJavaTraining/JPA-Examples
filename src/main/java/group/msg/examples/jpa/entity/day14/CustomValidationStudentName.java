@@ -12,7 +12,7 @@ import static java.lang.annotation.RetentionPolicy.RUNTIME;
 @Target({FIELD})
 @Retention(RUNTIME)
 public @interface CustomValidationStudentName {
-    String message() default "Custom validation did not pass!";
+    String message() default "Numele nu poate sa contina numere sau caractere speciale!";
 
     Class<?>[] groups() default {};
 
