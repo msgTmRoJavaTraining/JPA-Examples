@@ -62,8 +62,15 @@ public class StudentCRUDTest extends JPABaseTest {
 
         utx.begin();
         em.joinTransaction();
+
         StudentEntity studentEntity = em.find(StudentEntity.class, 51);
         em.remove(studentEntity);
+
+        try {
+            utx.commit();
+        } catch (RollbackException | HeuristicMixedException | HeuristicRollbackException e) {
+            e.printStackTrace();
+        }
     }
 
     @Test
