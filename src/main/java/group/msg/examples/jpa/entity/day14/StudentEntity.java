@@ -38,6 +38,9 @@ public class StudentEntity implements Serializable {
     @Email(message="E-mail is not valid")
     private String email;
 
+    @OneToMany(mappedBy = "student", cascade = CascadeType.REMOVE)
+    private Collection<GradesEntity> grades;
+
     @ManyToMany
     @JoinTable(name = "student_subject",
             joinColumns = @JoinColumn(name = "student_id"),

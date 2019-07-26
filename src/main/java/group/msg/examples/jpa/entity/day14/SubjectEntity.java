@@ -20,4 +20,7 @@ public class SubjectEntity {
             joinColumns = @JoinColumn(name = "subject_id"),
             inverseJoinColumns = @JoinColumn(name = "student_id"))
     private Collection<StudentEntity> manyToMany;
+
+    @OneToOne(mappedBy = "subject")
+    private GradesEntity grade;
 }

@@ -1,9 +1,6 @@
 package group.msg.test.jpa.day14;
 
-import group.msg.examples.jpa.entity.day14.AddressEntity;
-import group.msg.examples.jpa.entity.day14.StudentEntity;
-import group.msg.examples.jpa.entity.day14.SubjectEntity;
-import group.msg.examples.jpa.entity.day14.UniversityEntity;
+import group.msg.examples.jpa.entity.day14.*;
 import group.msg.test.jpa.JPABaseTest;
 import org.hibernate.validator.internal.constraintvalidators.bv.NotNullValidator;
 import org.jboss.arquillian.container.test.api.Deployment;
@@ -217,9 +214,25 @@ public class StudentCRUDTest extends JPABaseTest {
         subjects.get(0).setName("Programare Java");
         subjects.get(1).setName("Programarea Aplicatiilor Multimedia");
 
+        List<GradesEntity> grades = new ArrayList<>();
+        grades.add(new GradesEntity());
+        grades.add(new GradesEntity());
+
+        grades.get(0).setGrade(10);
+        grades.get(0).setSubject(subjects.get(0));
+        grades.get(0).setStudent(students.get(0));
+
+        grades.get(1).setGrade(9);
+        grades.get(1).setSubject(subjects.get(0));
+        grades.get(1).setStudent(students.get(1));
+
+        subjects.get(0).setGrade(grades.get(0));
+        subjects.get(0).setGrade(grades.get(1));
+
+        students.get(0).setGrades(grades);
+        students.get(1).setGrades(grades);
+
         subjects.get(0).setManyToMany(students);
-
-
 
         try {
             em.persist(university);
@@ -230,6 +243,10 @@ public class StudentCRUDTest extends JPABaseTest {
 
             for(StudentEntity s : students) {
                 em.persist(s);
+            }
+
+            for(GradesEntity g : grades) {
+                em.persist(g);
             }
 
             utx.commit();
