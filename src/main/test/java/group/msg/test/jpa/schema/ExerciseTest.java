@@ -104,9 +104,27 @@ public class ExerciseTest extends JPABaseTest {
         Student st=new Student();
         st.setLastName("ddsdss");
         st.setFirstName("fdsfsddsd");
+        Address adrs=new Address();
+        adrs.setStreet("theStreet");
+        adrs.setCountry("theCountry");
+        adrs.setCity("theCity");
+        st.setHomeAddress(adrs);
         em.persist(st);
     }
+    @Test
+    public void bannedStudents(){
+        Student toAdd=new Student();
+        Address adrs=new Address();
+        adrs.setStreet("theStreet");
+        adrs.setCountry("theCountry");
+        adrs.setCity("theCity");
+        toAdd.setHomeAddress(adrs);
+        toAdd.setFirstName("Cris");
+        toAdd.setLastName("Pop");
 
+
+            em.persist(toAdd);
+    }
 }
 
 

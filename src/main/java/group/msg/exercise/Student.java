@@ -1,5 +1,6 @@
 package group.msg.exercise;
 
+import group.msg.examples.jpa.validator.BannedNames;
 import lombok.Data;
 
 import javax.persistence.*;
@@ -21,9 +22,12 @@ public class Student {
     @ManyToOne
     private University university;
 
+    @BannedNames
     private String firstName;
+
     private String lastName;
     private String section;
+
 
 
         @ManyToMany
@@ -31,5 +35,6 @@ public class Student {
                 joinColumns = @JoinColumn(name = "student_id"),
                 inverseJoinColumns = @JoinColumn(name = "subject_id"))
     private List<Subject> subjects;
+
 
 }
