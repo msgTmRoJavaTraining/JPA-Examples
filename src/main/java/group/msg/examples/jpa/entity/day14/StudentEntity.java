@@ -11,6 +11,7 @@ import java.util.Collection;
 @Data
 @Entity
 @Table(name = "student_entity")
+@CustomValidationStudentAddress
 public class StudentEntity implements Serializable {
     @Id
     @GeneratedValue
