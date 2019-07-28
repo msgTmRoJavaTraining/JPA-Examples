@@ -24,7 +24,7 @@ public class Subject {
 
 
     @ManyToMany
-    @JoinTable(name = "many_many",
+    @JoinTable(name = "Student_Subject",
             joinColumns = @JoinColumn(name = "subject_id"),
             inverseJoinColumns = @JoinColumn(name = "student_id"))
     private Collection<Student> manyToManyStudent;
