@@ -1,8 +1,6 @@
 package group.msg.test.jpa.exercise_test;
 
-
 import group.msg.examples.jpa.exercise_entityPackage.*;
-import group.msg.examples.jpa.validator.ValidationEntity;
 import group.msg.test.jpa.JPABaseTest;
 import org.jboss.arquillian.container.test.api.Deployment;
 import org.jboss.arquillian.junit.Arquillian;
@@ -12,35 +10,39 @@ import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-
-
-import javax.persistence.EntityManagerFactory;
-import javax.persistence.PersistenceUnit;
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
-
+import javax.transaction.*;
 import java.util.ArrayList;
 import java.util.List;
 
-
 @RunWith(Arquillian.class)
-public class Exercise_test extends JPABaseTest {
+public class Exercises_studentGradesTest extends JPABaseTest {
     private static final int NUMBER_OF_ENTITIES = 5;
 
-
+    @PersistenceContext
+    private EntityManager em;
     @Deployment
     public static WebArchive createDeployment() {
         return ShrinkWrap.create(WebArchive.class, "JPAExamples.war")
-                .addPackages(true,"group.msg")
+                .addPackages(true, "group.msg")
                 .addAsResource("test-persistence.xml", "META-INF/persistence.xml")
                 .addAsResource("../classes/META-INF/beans.xml", "META-INF/beans.xml");
     }
     @Test
-    public void testUpdateSimpleEntity() {
-        Query check = em.createNativeQuery("select stud.STUDENT_ID from student stud where stud.lastname = 'Maria'");
-       List<Integer> simpleEntityId = check.getResultList();
-        Assert.assertEquals("Entity not updated!", 1, simpleEntityId.size());
+    public void testGradesCreation() {
+        Query check = em.createNativeQuery("select gr.grade from GRADES_ENTITY gr where gr.SUBJECTID = 1");
+        List<Integer> simpleEntityId = check.getResultList();
+        Assert.assertEquals("Entity not updated!", 2, simpleEntityId.size());
     }
-
+    @Test
+    @Transactional
+    public void testStudentRemoval() {
+        Student stud = em.find(Student.class,1);
+        em.getTransaction();
+        em.remove(stud);
+    }
 
     @Override
     protected void insertData()throws Exception{
@@ -48,74 +50,83 @@ public class Exercise_test extends JPABaseTest {
         em.joinTransaction();
         System.out.println("Inserting records...");
         University u1 = new University();
-        University u2 = new University();
         Subject s1 = new Subject();
         Subject s2 = new Subject();
-        Subject s3 = new Subject();
         Student stud = new Student();
+        Grades gr1 = new Grades();
+        Grades gr2 = new Grades();
+        Grades gr3 = new Grades();
+        List<Grades>gradeList= new ArrayList<>();
+
+        gr1.setIdGrade(1);
+        gr1.setSubject(s1);
+        gr1.setStudent(stud);
+        gr1.setGrade(10);
+
+        gr2.setIdGrade(2);
+        gr2.setSubject(s1);
+        gr2.setStudent(stud);
+        gr2.setGrade(5);
+
+        gr3.setIdGrade(3);
+        gr3.setSubject(s2);
+        gr3.setStudent(stud);
+        gr3.setGrade(7);
+
         s1.setName("sub1");
         s1.setSubject_id(1);
+
+        gradeList.add(gr1);
+        gradeList.add(gr2);
+        gradeList.add(gr3);
+
         s2.setName("sub2");
         s2.setSubject_id(2);
-        s3.setName("sub3");
-        s3.setSubject_id(3);
+
         List<Subject> sub = new ArrayList<>();
-        List<Subject> sub2 = new ArrayList<>();
         sub.add(s1);
         sub.add(s2);
-        sub2.add(s3);
-        sub2.add(s1);
+
         u1.setName("UVT");
         u1.setUniversity_id(12);
         u1.setCountry("country");
-        u2.setName("UPT");
-        u2.setUniversity_id(13);
-        u2.setCountry("OtherCountry");
+
 
         stud.setLastName("Maria");
         stud.setFirstName("SSS");
         stud.setAddress(new Address("somewhere1","city1", "country"));
         stud.setUniversity(u1);
-        stud.setSubjects(sub2);
+        stud.setSubjects(sub);
+        stud.setGrades(gradeList);
         stud.setEmail("maria@e-uvt.ro");
 
         em.persist(u1);
-        em.persist(u2);
         em.persist(s1);
         em.persist(s2);
-        em.persist(s3);
+        em.persist(gr1);
+        em.persist(gr2);
+        em.persist(gr3);
         em.persist(stud);
 
-        for (int i = 1; i <= NUMBER_OF_ENTITIES; i++) {
-            Student s = new Student();
-
-            if (i % 2 == 0) {
-                s.setLastName("Alina" + i);
-                s.setFirstName("Ionescu");
-                s.setAddress(new Address("somewhere","city", "country"));
-                s.setUniversity(u1);
-                s.setSubjects(sub);
-                s.setEmail("alina" + i + "@e-uvt.ro");
-            } else {
-                s.setLastName("Mihai"+ i);
-                s.setFirstName("Xulescu");
-                s.setAddress(new Address("somewhere2","city2", "OtherCountry"));
-                s.setUniversity(u2);
-                s.setSubjects(sub2);
-                s.setEmail("mihai" + i+ "@e-uvt.ro");
-            }
-            em.persist(s);
-
-        }
         utx.commit();
 
         em.clear();
     }
-   @Override
+    @Override
     protected void internalClearData() {
         em.createNativeQuery("delete from STUDENT").executeUpdate();
-       em.createNativeQuery("delete from SUBJECT_ENTITY").executeUpdate();
-       em.createNativeQuery("delete from UNIVERSITY_ENTITY").executeUpdate();
-       em.createNativeQuery("delete from STUDENT_SUBJECT").executeUpdate();
+        em.createNativeQuery("delete from SUBJECT_ENTITY").executeUpdate();
+        em.createNativeQuery("delete from UNIVERSITY_ENTITY").executeUpdate();
+        em.createNativeQuery("delete from STUDENT_SUBJECT").executeUpdate();
+    }
+
+    @Override
+    protected void startTransaction() {
+        // Multiple transactions needed
+    }
+
+    @Override
+    public void commitTransaction() {
+        // Don't commit non existent transaction
     }
 }

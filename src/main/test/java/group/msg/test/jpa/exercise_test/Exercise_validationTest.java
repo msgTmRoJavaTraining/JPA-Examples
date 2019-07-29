@@ -1,5 +1,6 @@
 package group.msg.test.jpa.exercise_test;
 
+import com.oracle.wls.shaded.org.apache.xalan.xsltc.dom.AdaptiveResultTreeImpl;
 import group.msg.examples.jpa.exercise_entityPackage.Address;
 import group.msg.examples.jpa.exercise_entityPackage.Student;
 import group.msg.examples.jpa.exercise_entityPackage.Subject;
@@ -74,7 +75,8 @@ public class Exercise_validationTest extends JPABaseTest {
         Subject s1 = new Subject();
         Subject s2 = new Subject();
         Subject s3 = new Subject();
-        Address adr= new Address("somewhere","city", "OtherCountry");
+        Address adr= new Address("somewhere","city", "Othercountry");
+        Address adr2=new Address("somewhere","city", "country1");
         s1.setName("sub1");
         s1.setSubject_id(1);
         s2.setName("sub2");

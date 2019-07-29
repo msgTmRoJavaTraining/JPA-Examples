@@ -1,5 +1,7 @@
 package group.msg.examples.jpa.exercise_entityPackage;
 import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 
 import javax.persistence.*;
 import javax.validation.constraints.Email;
@@ -7,7 +9,8 @@ import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 import java.util.Collection;
 
-@Data
+@Getter
+@Setter
 @Entity
 @Table(name = "student")
 @CustomCityValidation
@@ -39,6 +42,10 @@ public class Student implements Serializable{
                 joinColumns = @JoinColumn(name = "student_id"),
                 inverseJoinColumns = @JoinColumn(name = "subject_id"))
         private Collection<Subject> subjects;
+
+
+        @OneToMany()
+        private Collection<Grades> grades;
 
 }
 
