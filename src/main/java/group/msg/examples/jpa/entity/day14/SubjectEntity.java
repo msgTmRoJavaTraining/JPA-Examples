@@ -16,20 +16,14 @@ public class SubjectEntity {
     @GeneratedValue
     private int id;
 
-    @OneToOne
+    @OneToOne(mappedBy = "subject")
     @JoinColumn(name="grade")
     private GradeEntity grade;
-
-    @Version
-    private long version;
 
     @NotNull
     @Column(name = "name")
     private String name;
 
-    @Lob
-    @Basic(fetch = FetchType.LAZY)
-    private byte[] picture;
 
     @ManyToMany
     @JoinTable(name = "student_to_subject",

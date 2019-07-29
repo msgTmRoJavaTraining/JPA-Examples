@@ -23,14 +23,11 @@ public class StudentEntity implements Serializable {
     @GeneratedValue
     private int id;
 
-    @Version
-    private long version;
-
     @ManyToOne
     @JoinColumn(name = "one_university")
     private UniversityEntity university_id;
 
-    @OneToMany(cascade= CascadeType.REMOVE)
+    @OneToMany(mappedBy = "studentEntity", cascade= CascadeType.REMOVE)
     @JoinColumn(name = "grade")
     private Collection<GradeEntity> grade;
 
@@ -52,12 +49,6 @@ public class StudentEntity implements Serializable {
     @Column(name = "section")
     private String section;
 
-    @Lob
-    @Basic(fetch = FetchType.LAZY)
-    private byte[] picture;
-
-    @Enumerated(EnumType.STRING)
-    private SimpleType type;
 
     @Embedded
     private AdressEmbeddableEntity address;

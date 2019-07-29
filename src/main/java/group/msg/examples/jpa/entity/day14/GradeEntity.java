@@ -5,16 +5,16 @@ import lombok.Data;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
+import java.io.Serializable;
 
 @Data
 @Entity
 @Table(name = "grade_entity")
-public class GradeEntity {
+public class GradeEntity implements Serializable {
 
     @Id
     @GeneratedValue
     private int id;
-
 
     @Column(name = "grade")
     private int grade;
