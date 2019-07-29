@@ -44,7 +44,7 @@ public class Student implements Serializable{
         private Collection<Subject> subjects;
 
 
-        @OneToMany()
+        @OneToMany(cascade = {CascadeType.REMOVE, CascadeType.PERSIST},mappedBy = "student")
         private Collection<Grades> grades;
 
 }

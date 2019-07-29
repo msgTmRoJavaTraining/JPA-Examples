@@ -40,7 +40,6 @@ public class Exercises_studentGradesTest extends JPABaseTest {
     @Transactional
     public void testStudentRemoval() {
         Student stud = em.find(Student.class,1);
-        em.getTransaction();
         em.remove(stud);
     }
 
@@ -103,9 +102,9 @@ public class Exercises_studentGradesTest extends JPABaseTest {
         em.persist(u1);
         em.persist(s1);
         em.persist(s2);
-        em.persist(gr1);
-        em.persist(gr2);
-        em.persist(gr3);
+//        em.persist(gr1);
+//        em.persist(gr2);
+//        em.persist(gr3);
         em.persist(stud);
 
         utx.commit();
@@ -114,10 +113,10 @@ public class Exercises_studentGradesTest extends JPABaseTest {
     }
     @Override
     protected void internalClearData() {
-        em.createNativeQuery("delete from STUDENT").executeUpdate();
-        em.createNativeQuery("delete from SUBJECT_ENTITY").executeUpdate();
-        em.createNativeQuery("delete from UNIVERSITY_ENTITY").executeUpdate();
-        em.createNativeQuery("delete from STUDENT_SUBJECT").executeUpdate();
+//        em.createNativeQuery("delete from STUDENT").executeUpdate();
+//        em.createNativeQuery("delete from SUBJECT_ENTITY").executeUpdate();
+//        em.createNativeQuery("delete from UNIVERSITY_ENTITY").executeUpdate();
+//        em.createNativeQuery("delete from STUDENT_SUBJECT").executeUpdate();
     }
 
     @Override
