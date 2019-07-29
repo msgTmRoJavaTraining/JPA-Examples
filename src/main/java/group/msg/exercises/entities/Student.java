@@ -19,13 +19,12 @@ public class Student {
     private int student_id;
 
     @Embedded
-
     private Adress adress;
 
     @ManyToOne
     private University university_id;
 
-    @OneToMany(cascade=CascadeType.REMOVE)
+    @OneToMany
     private List<Grades> grades;
 
     private String first_name;
@@ -40,14 +39,14 @@ public class Student {
             joinColumns = @JoinColumn(name = "student_id"),
             inverseJoinColumns = @JoinColumn(name = "subject_id"))
 
-    private Collection<Subject> manyToManySubject;
+    private List<Subject> manyToManySubject;
 
 
     public Student() {
         super();
     }
 
-    public Student(Adress adress, University university_id, String first_name, String last_name, String section, Collection<Subject> manyToManySubject) {
+    public Student(Adress adress, University university_id, String first_name, String last_name, String section, List<Subject> manyToManySubject) {
         this.adress = adress;
         this.university_id = university_id;
         this.first_name = first_name;

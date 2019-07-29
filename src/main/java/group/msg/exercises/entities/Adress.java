@@ -11,6 +11,7 @@ import javax.validation.constraints.NotNull;
 
 @Embeddable
 @Data
+@Table
 public class Adress {
 
 

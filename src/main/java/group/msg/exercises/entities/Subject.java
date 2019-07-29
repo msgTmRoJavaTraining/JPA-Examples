@@ -1,12 +1,12 @@
 package group.msg.exercises.entities;
 
-import group.msg.examples.jpa.entity.mapping.ManyEntity;
+
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
-import java.util.Collection;
+import java.util.List;
 
 @Entity
 @NoArgsConstructor
@@ -27,7 +27,7 @@ public class Subject {
     @JoinTable(name = "Student_Subject",
             joinColumns = @JoinColumn(name = "subject_id"),
             inverseJoinColumns = @JoinColumn(name = "student_id"))
-    private Collection<Student> manyToManyStudent;
+    private List<Student> manyToManyStudent;
 
 
 
