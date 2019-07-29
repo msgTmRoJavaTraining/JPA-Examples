@@ -20,6 +20,8 @@ public class Subject
     @JoinTable(name = "student_subject",
             joinColumns = @JoinColumn(name = "subject_id"),
             inverseJoinColumns = @JoinColumn(name = "student_id"))
+
     private List<StudentEntity> students;
+
 
 }

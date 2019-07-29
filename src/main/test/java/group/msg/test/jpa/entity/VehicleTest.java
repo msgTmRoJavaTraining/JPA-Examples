@@ -52,12 +52,9 @@ public class VehicleTest extends JPABaseTest
         em.clear();
     }
 
-
     @Test
     public void testVehicle() {
-
     }
-
 
     @Deployment
     public static WebArchive createDeployment() {

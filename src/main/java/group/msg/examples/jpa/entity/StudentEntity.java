@@ -1,14 +1,15 @@
 package group.msg.examples.jpa.entity;
 
 import group.msg.examples.jpa.validator.MyCustomValidator;
-import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 
 import javax.persistence.*;
-import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 import java.util.List;
 
-@Data
+@Getter
+@Setter
 @Entity
 @Table
 public class StudentEntity implements Serializable
@@ -17,11 +18,12 @@ public class StudentEntity implements Serializable
     @GeneratedValue
     private int student_id;
 
-    @ManyToOne
+
+    @ManyToOne(cascade=CascadeType.PERSIST)
     @JoinColumn(name = "universitate")
     private University university;
 
-    @NotNull
+
     @Embedded
     private HomeAddress homeAddress;
 
@@ -39,7 +41,10 @@ public class StudentEntity implements Serializable
         this.section = section;
     }
 
-    @ManyToMany
+    @OneToMany(cascade = CascadeType.REFRESH, mappedBy = "studentEntity")
+    private List<Grades> grades;
+
+    @ManyToMany(cascade=CascadeType.PERSIST)
     @JoinTable(name = "student_subject",
             joinColumns = @JoinColumn(name = "student_id"),
             inverseJoinColumns = @JoinColumn(name = "subject_id"))

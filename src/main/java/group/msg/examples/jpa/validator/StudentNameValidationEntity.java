@@ -10,7 +10,7 @@ import javax.validation.constraints.Size;
 
 @Data
 @Entity
-@Table(name = "validationName_entity")
+@Table(name = "validation_entity")
 public class StudentNameValidationEntity
 {
 

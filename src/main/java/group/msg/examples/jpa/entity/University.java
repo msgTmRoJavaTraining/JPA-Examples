@@ -6,8 +6,8 @@ import javax.persistence.*;
 import java.util.List;
 
 @Data
-@Entity
 @Table
+@Entity
 public class University {
 
     @Id

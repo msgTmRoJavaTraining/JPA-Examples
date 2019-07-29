@@ -1,6 +1,7 @@
-package group.msg.test.jpa.validator;
+package group.msg.test.jpa.entity;
 
 
+import group.msg.examples.jpa.entity.StudentEntity;
 import group.msg.examples.jpa.entity.University;
 import group.msg.examples.jpa.validator.CustomValidation;
 import group.msg.examples.jpa.validator.CustomValidator;
@@ -17,32 +18,32 @@ import org.junit.runner.RunWith;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.PersistenceUnit;
-import javax.persistence.Query;
 import javax.validation.ConstraintViolationException;
 
 @RunWith(Arquillian.class)
-public class StudentNameValidTest extends JPABaseTest
+public class ValidNameTest extends JPABaseTest
 {
 
     @PersistenceUnit(unitName = "test")
     private EntityManagerFactory emf;
 
+
     @Test
     public void testValidationEntity() throws Exception{
 
-        validatePersistenceObject();
+        validateObject();
+
     }
 
-    private void validatePersistenceObject() throws Exception {
+
+    private void validateObject() throws Exception {
 
         EntityManager entityManager = emf.createEntityManager();
         utx.begin();
         entityManager.joinTransaction();
 
 //
-        University university=new University();
-        university.setName("UPT");
-        university.setCountry("Romania");
+        StudentEntity studentEntity=new StudentEntity();
 
 
         //StudentEntity studentEntity=new StudentEntity();
@@ -50,7 +51,7 @@ public class StudentNameValidTest extends JPABaseTest
 
 
 
-   // university.setStudentEntityList();
+        // university.setStudentEntityList();
         //
 //        ArrayList<Subject>subjects=new ArrayList<>();
 //
@@ -73,19 +74,20 @@ public class StudentNameValidTest extends JPABaseTest
 //        student.setSubjects(subjects);
 //
 
-        entityManager.persist(university);
-//        try {
-//             entityManager.persist(university);
+        try {
+            entityManager.persist(studentEntity);
 //
 //            for(Subject s:subjects)
 //                entityManager.persist(s);
 //
-           //entityManager.persist(studentEntity);
+            //entityManager.persist(studentEntity);
             utx.commit();
-//        } catch (ConstraintViolationException e) {
-//            utx.rollback();
-//        }
+        } catch (ConstraintViolationException e) {
+            utx.rollback();
+        }
     }
+
+
 
     @Deployment
     public static WebArchive createDeployment() {
@@ -104,4 +106,5 @@ public class StudentNameValidTest extends JPABaseTest
     public void commitTransaction() {
         // Don't commit non existent transaction
     }
+
 }
