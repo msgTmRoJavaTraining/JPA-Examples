@@ -45,5 +45,5 @@ public class StudentEntity implements Serializable {
     @JoinTable(name = "student_subject",
             joinColumns = @JoinColumn(name = "student_id"),
             inverseJoinColumns = @JoinColumn(name = "subject_id"))
-    private Collection<SubjectEntity> manyToMany;
+    private Collection<SubjectEntity> materiiStudent;
 }

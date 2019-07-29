@@ -94,7 +94,7 @@ public class StudentCRUDTest extends JPABaseTest {
         student.setSection("Informatica");
         student.setEmail("biancahisigan@gmail.com");
 
-        subject.setManyToMany(Collections.singletonList(student));
+        subject.setMateriiStudent(Collections.singletonList(student));
 
         utx.begin();
         em.joinTransaction();
@@ -140,7 +140,7 @@ public class StudentCRUDTest extends JPABaseTest {
         student.setSection("Informatica");
         student.setEmail("bogdanmarasan@gmail.com");
 
-        subject.setManyToMany(Collections.singletonList(student));
+        subject.setMateriiStudent(Collections.singletonList(student));
 
         utx.begin();
         em.joinTransaction();
@@ -232,7 +232,7 @@ public class StudentCRUDTest extends JPABaseTest {
         students.get(0).setGrades(grades);
         students.get(1).setGrades(grades);
 
-        subjects.get(0).setManyToMany(students);
+        subjects.get(0).setMateriiStudent(students);
 
         try {
             em.persist(university);

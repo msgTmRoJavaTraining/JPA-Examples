@@ -15,7 +15,7 @@ public class UniversityEntity {
     private int university_id;
 
     @OneToMany(mappedBy = "university_id")
-    private Collection<StudentEntity> oneToManyStudents;
+    private Collection<StudentEntity> oneUniversityToManyStudents;
 
     private String name;
 
