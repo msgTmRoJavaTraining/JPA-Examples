@@ -309,6 +309,10 @@ public class StudentTest extends JPABaseTest {
         grades.add(grade2);
         grades.add(grade3);
 
+        student.setGrade(grades);
+        student1.setGrade(grades);
+        student2.setGrade(grades);
+
         em.persist(universityEntity);
 
         for (SubjectEntity sub : subjectEntities) {
@@ -322,9 +326,9 @@ public class StudentTest extends JPABaseTest {
             em.persist(s);
         }
 
-        for (GradeEntity g : grades) {
-            em.persist(g);
-        }
+//        for (GradeEntity g : grades) {
+//            em.persist(g);
+//        }
 
         utx.commit();
 

@@ -6,6 +6,8 @@ import group.msg.examples.jpa.entity.SimpleType;
 import group.msg.examples.jpa.entity.mapping.ManyEntity;
 import group.msg.examples.jpa.entity.mapping.OneEntity;
 import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 
 import javax.persistence.*;
 import javax.validation.constraints.Email;
@@ -13,7 +15,8 @@ import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 import java.util.Collection;
 
-@Data
+@Setter
+@Getter
 @Entity
 @CustomForAddress
 @Table(name = "student_entity")
@@ -27,7 +30,7 @@ public class StudentEntity implements Serializable {
     @JoinColumn(name = "one_university")
     private UniversityEntity university_id;
 
-    @OneToMany(mappedBy = "studentEntity", cascade= CascadeType.REMOVE)
+    @OneToMany(mappedBy = "studentEntity", cascade={ CascadeType.REMOVE,CascadeType.PERSIST})
     @JoinColumn(name = "grade")
     private Collection<GradeEntity> grade;
 
