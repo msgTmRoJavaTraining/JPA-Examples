@@ -28,7 +28,7 @@ public class Student {
     private String lastName;
     private String section;
 
-    @OneToMany(cascade = CascadeType.REMOVE)
+    @OneToMany(cascade = CascadeType.REMOVE,mappedBy = "student")
     private List <Grade>grades;
 
 

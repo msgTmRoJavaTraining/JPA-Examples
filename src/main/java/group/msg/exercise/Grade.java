@@ -19,6 +19,7 @@ public class Grade {
     private double grd;
 
     @ManyToOne
+    @JoinColumn(name="studentId")
     private Student student;
 
     @OneToOne
