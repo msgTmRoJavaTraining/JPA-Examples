@@ -6,9 +6,11 @@ import javax.persistence.*;
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
+import java.util.jar.Attributes;
 
 @Entity
 @Data
+@Table(name = "GRADES")
 public class GradeEntity {
 
     @Id
@@ -21,6 +23,7 @@ public class GradeEntity {
     private double grade;
 
     @ManyToOne
+    @JoinColumn(name = "student_id")
     private StudentEntity student;
 
     @OneToOne
