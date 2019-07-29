@@ -1,6 +1,8 @@
 package group.msg.examples.jpa.entity.day14;
 
 import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 
 import javax.persistence.*;
 import javax.validation.constraints.Email;
@@ -8,7 +10,7 @@ import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 import java.util.Collection;
 
-@Data
+@Getter @Setter
 @Entity
 @Table(name = "student_entity")
 @CustomValidationStudentAddress
@@ -38,7 +40,7 @@ public class StudentEntity implements Serializable {
     @Email(message="E-mail is not valid")
     private String email;
 
-    @OneToMany(mappedBy = "student", cascade = CascadeType.REMOVE)
+    @OneToMany(mappedBy = "student", cascade = { CascadeType.REMOVE, CascadeType.PERSIST })
     private Collection<GradesEntity> grades;
 
     @ManyToMany

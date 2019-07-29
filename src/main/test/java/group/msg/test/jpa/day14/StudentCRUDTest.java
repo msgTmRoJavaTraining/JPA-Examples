@@ -245,10 +245,6 @@ public class StudentCRUDTest extends JPABaseTest {
                 em.persist(s);
             }
 
-            for(GradesEntity g : grades) {
-                em.persist(g);
-            }
-
             utx.commit();
         } catch (ConstraintViolationException e) {
             utx.rollback();
