@@ -47,6 +47,19 @@ public class Student implements Serializable{
         @OneToMany(cascade = {CascadeType.REMOVE, CascadeType.PERSIST},mappedBy = "student")
         private Collection<Grades> grades;
 
+        @Override
+        public String toString() {
+                return "Student{" +
+                        "student_id=" + student_id +
+                        ", address=" + address +
+                        ", firstName='" + firstName + '\'' +
+                        ", lastName='" + lastName + '\'' +
+                        ", email='" + email + '\'' +
+                        ", university=" + university +
+                        ", subjects=" + subjects +
+                        ", grades=" + grades +
+                        '}';
+        }
 }
 
 
