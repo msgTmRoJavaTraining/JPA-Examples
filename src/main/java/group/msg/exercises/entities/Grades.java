@@ -16,6 +16,7 @@ import javax.persistence.*;
 public class Grades {
 
     @ManyToOne
+    @JoinColumn(name = "student_id")
     private Student student;
     @OneToOne
     private Subject subject;

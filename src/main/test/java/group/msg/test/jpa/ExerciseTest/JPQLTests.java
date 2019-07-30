@@ -56,8 +56,9 @@ public class JPQLTests extends JPABaseTest {
     @Test
     public void calculateAverage(){
 
-        Query avgQuery = em.createQuery("select avg(grade.value) from Student student JOIN student.grades grade ");
-        Assert.assertEquals("Query did not return the correct result!", "7.0", avgQuery.getSingleResult().toString());
+        TypedQuery<Double> avgQuery = em.createQuery("select avg(grade.value) from Student student JOIN student.grades grade group by student.first_name", Double.class);
+        for (Double dd : avgQuery.getResultList())
+            System.out.println(dd);
     }
 
     @Test
@@ -73,8 +74,7 @@ public class JPQLTests extends JPABaseTest {
     @Test
     public void testCity(){
 
-        Query countQuery = em.createQuery("select count(student) from Student student where student.adress.city like ?1");
-        countQuery.setParameter(1,"Timisoara");
+        Query countQuery = em.createQuery("select count(adres.city) from Student student JOIN student.adress adres group by adres.city");
         Assert.assertEquals(Long.valueOf(1),countQuery.getSingleResult());
     }
 
