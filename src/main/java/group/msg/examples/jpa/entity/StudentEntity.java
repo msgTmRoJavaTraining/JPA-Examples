@@ -23,7 +23,6 @@ public class StudentEntity implements Serializable
     @JoinColumn(name = "universitate")
     private University university;
 
-
     @Embedded
     private HomeAddress homeAddress;
 

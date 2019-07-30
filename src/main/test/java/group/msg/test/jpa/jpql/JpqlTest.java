@@ -15,6 +15,10 @@ import org.junit.runner.RunWith;
 
 import javax.persistence.Query;
 import javax.persistence.TypedQuery;
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Join;
+import javax.persistence.criteria.Root;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -71,6 +75,47 @@ public class JpqlTest extends JPABaseTest {
             System.out.println(i+" ");
 
     }
+
+    @Test
+    public void testCityApi()
+    {
+        CriteriaBuilder builder = em.getCriteriaBuilder();
+        CriteriaQuery query = builder.createQuery();
+
+        Root<StudentEntity> stud = query.from(em.getMetamodel().entity(StudentEntity.class));
+        Join<StudentEntity,HomeAddress> joinAddress = stud.join("homeAddress");
+
+        TypedQuery<StudentEntity> result=em.createQuery(query.select(stud).where(builder.equal(joinAddress.get("city"),"Arad")));
+
+        List<StudentEntity> list=result.getResultList();
+        list.forEach(e-> System.out.println(e.getFirst_name()+" from : "+e.getHomeAddress().getCity()));
+
+        Assert.assertEquals("Query did not return the correct result!", 2, result.getResultList().size());
+    }
+
+
+
+    @Test
+    public void testSubjectApi()
+    {
+
+        CriteriaBuilder builder = em.getCriteriaBuilder();
+        CriteriaQuery query = builder.createQuery();
+
+        Root<StudentEntity> stud = query.from(em.getMetamodel().entity(StudentEntity.class));
+        Join<StudentEntity,Subject> joinSubject = stud.join("subjects");
+
+        TypedQuery<StudentEntity> result=em.createQuery(query.select(stud).where(builder.equal(joinSubject.get("name"),"chimie")));
+        Assert.assertEquals("Query did not return the correct result!", 3, result.getResultList().size());
+    }
+
+
+
+
+
+
+
+
 
     @Override
     protected void insertData() throws Exception {
