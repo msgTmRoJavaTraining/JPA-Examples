@@ -1,9 +1,6 @@
 package group.msg.test.jpa.jpql;
 
-import group.msg.examples.jpa.entity.Grades;
-import group.msg.examples.jpa.entity.HomeAddress;
-import group.msg.examples.jpa.entity.StudentEntity;
-import group.msg.examples.jpa.entity.Subject;
+import group.msg.examples.jpa.entity.*;
 import group.msg.test.jpa.JPABaseTest;
 import org.jboss.arquillian.container.test.api.Deployment;
 import org.jboss.arquillian.junit.Arquillian;
@@ -29,7 +26,8 @@ public class JpqlTest extends JPABaseTest {
     private static List<Object> persistedObjects = new ArrayList<>();
     private List<Subject> materii = new ArrayList<>();
     private List<Subject> materii2 = new ArrayList<>();
-    private List<Grades> note=new ArrayList<>();
+    private List<Grades> note = new ArrayList<>();
+
     @Test
     public void testCity() {
 
@@ -48,7 +46,7 @@ public class JpqlTest extends JPABaseTest {
     @Test
     public void testGrade() {
 
-        Query groupBy = em.createQuery("select avg(nota.valoare) from StudentEntity student join student.grades nota");
+        Query groupBy = em.createQuery("select avg(nota.valoare) from StudentEntity student join fetch student.grades nota group by student.first_name");
         System.out.println(groupBy.getResultList().toString());
 
     }
@@ -58,63 +56,109 @@ public class JpqlTest extends JPABaseTest {
 
         Query groupBy = em.createQuery("select avg(n.valoare) from StudentEntity student join fetch student.grades n group by student.first_name having avg(n.valoare)>8");
 
-        List<Double> list=groupBy.getResultList();
-        for(Double d:list)
-            System.out.println(d+" ");
+        List<Double> list = groupBy.getResultList();
+        for (Double d : list)
+            System.out.println(d + " ");
     }
 
     @Test
-    public void testNumberOfStudentsLocated()
-    {
+    public void testNumberOfStudentsLocated() {
 
         Query groupBy = em.createQuery("select count(student.homeAddress.city) from StudentEntity student group by student.homeAddress.city");
 
-        List<Long> list=groupBy.getResultList();
+        List<Long> list = groupBy.getResultList();
 
-        for(long i:list)
-            System.out.println(i+" ");
+        for (long i : list)
+            System.out.println(i + " ");
 
     }
 
     @Test
-    public void testCityApi()
-    {
+    public void testCityApi() {
         CriteriaBuilder builder = em.getCriteriaBuilder();
         CriteriaQuery query = builder.createQuery();
 
         Root<StudentEntity> stud = query.from(em.getMetamodel().entity(StudentEntity.class));
-        Join<StudentEntity,HomeAddress> joinAddress = stud.join("homeAddress");
+        Join<StudentEntity, HomeAddress> joinAddress = stud.join("homeAddress");
 
-        TypedQuery<StudentEntity> result=em.createQuery(query.select(stud).where(builder.equal(joinAddress.get("city"),"Arad")));
+        TypedQuery<StudentEntity> result = em.createQuery(query.select(stud).where(builder.equal(joinAddress.get("city"), "Arad")));
 
-        List<StudentEntity> list=result.getResultList();
-        list.forEach(e-> System.out.println(e.getFirst_name()+" from : "+e.getHomeAddress().getCity()));
+        List<StudentEntity> list = result.getResultList();
+        list.forEach(e -> System.out.println(e.getFirst_name() + " from : " + e.getHomeAddress().getCity()));
 
         Assert.assertEquals("Query did not return the correct result!", 2, result.getResultList().size());
     }
 
 
-
     @Test
-    public void testSubjectApi()
-    {
+    public void testSubjectApi() {
 
         CriteriaBuilder builder = em.getCriteriaBuilder();
         CriteriaQuery query = builder.createQuery();
 
         Root<StudentEntity> stud = query.from(em.getMetamodel().entity(StudentEntity.class));
-        Join<StudentEntity,Subject> joinSubject = stud.join("subjects");
+        Join<StudentEntity, Subject> joinSubject = stud.join("subjects");
 
-        TypedQuery<StudentEntity> result=em.createQuery(query.select(stud).where(builder.equal(joinSubject.get("name"),"chimie")));
+        TypedQuery<StudentEntity> result = em.createQuery(query.select(stud).where(builder.equal(joinSubject.get("name"), "chimie")));
+
+        List<StudentEntity> list = result.getResultList();
+        list.forEach(e -> System.out.println(e.getFirst_name()));
+
         Assert.assertEquals("Query did not return the correct result!", 3, result.getResultList().size());
     }
 
+    @Test
+    public void testGradeApi() {
 
+        CriteriaBuilder builder = em.getCriteriaBuilder();
+        CriteriaQuery query = builder.createQuery(Double.class);
 
+        Root<StudentEntity> stud = query.from(em.getMetamodel().entity(StudentEntity.class));
+        Join<StudentEntity, Grades> joinGrades = stud.join("grades");
 
+        query.select(builder.avg(joinGrades.get(Grades_.valoare))).groupBy(stud.get(StudentEntity_.first_name));
 
+        TypedQuery<Double> nume = em.createQuery(query);
+        List<Double> list = nume.getResultList();
+        list.forEach(System.out::println);
 
+        Assert.assertEquals("Query did not return the correct result!", 2, nume.getResultList().size());
+    }
 
+    @Test
+    public void testGradesAboveApi() {
+        CriteriaBuilder builder = em.getCriteriaBuilder();
+        CriteriaQuery query = builder.createQuery(Double.class);
+
+        Root<StudentEntity> stud = query.from(em.getMetamodel().entity(StudentEntity.class));
+        Join<StudentEntity, Grades> joinGrades = stud.join("grades");
+
+        query.select(builder.avg(joinGrades.get(Grades_.valoare))).groupBy(stud.get(StudentEntity_.first_name))
+
+                .having(builder.gt(builder.avg(joinGrades.get(Grades_.valoare)), 8));
+
+        TypedQuery<Double> nume = em.createQuery(query);
+        List<Double> list = nume.getResultList();
+        list.forEach(System.out::println);
+        Assert.assertEquals("Query did not return the correct result!", 1, nume.getResultList().size());
+    }
+
+    @Test
+    public void testNumberOfStudentsLocatedApi() {
+
+        CriteriaBuilder builder = em.getCriteriaBuilder();
+        CriteriaQuery query = builder.createQuery(Double.class);
+
+        Root<StudentEntity> stud = query.from(em.getMetamodel().entity(StudentEntity.class));
+        Join<StudentEntity, HomeAddress> joinAddress = stud.join("homeAddress");
+
+        query.select(builder.count(joinAddress.get(HomeAddress_.city))).groupBy(joinAddress.get(HomeAddress_.city));
+        TypedQuery<Long> nr = em.createQuery(query);
+
+        List<Long> list = nr.getResultList();
+        list.forEach(System.out::println);
+
+    }
 
 
     @Override
@@ -157,6 +201,7 @@ public class JpqlTest extends JPABaseTest {
         student1.setFirst_name("Ionut");
         student1.setHomeAddress(new HomeAddress("Arges", "Timisoara", "Romania"));
         student1.setSubjects(materii);
+        student1.setGrades(note);
         em.persist(student1);
         persistedObjects.add(student1);
 
@@ -185,26 +230,32 @@ public class JpqlTest extends JPABaseTest {
         persistedObjects.add(student5);
 
 
-        Grades g2=new Grades();
-        g2.setValoare(8.4);
+        Grades g2 = new Grades();
+        g2.setValoare(10);
         g2.setStudentEntity(student);
         g2.setSubject(mate);
 
-        Grades g3=new Grades();
-        g3.setValoare(9.87);
+        Grades g3 = new Grades();
+        g3.setValoare(10);
         g3.setStudentEntity(student);
         g3.setSubject(fizica);
 
-        Grades g4=new Grades();
-        g4.setValoare(7.56);
+        Grades g4 = new Grades();
+        g4.setValoare(7);
         g4.setStudentEntity(student);
         g4.setSubject(chimie);
+
+        Grades g5 = new Grades();
+        g5.setValoare(7.1);
+        g5.setStudentEntity(student1);
+        g5.setSubject(mate);
+
 
         note.add(g2);
         note.add(g3);
         note.add(g4);
-
-        for(Grades g: note)
+        note.add(g5);
+        for (Grades g : note)
             em.persist(g);
 
         utx.commit();
@@ -221,7 +272,7 @@ public class JpqlTest extends JPABaseTest {
     @Override
     protected void internalClearData() {
 
-        for(Object persisted : persistedObjects) {
+        for (Object persisted : persistedObjects) {
             Object entity = em.merge(persisted);
             em.remove(entity);
         }
