@@ -39,6 +39,6 @@ public class StudentEntity {
             inverseJoinColumns = @JoinColumn(name = "subject_id"))
     private List<SubjectEntity> subjects;
 
-    @OneToMany(cascade = CascadeType.REMOVE,mappedBy = "student")
+    @OneToMany(cascade = CascadeType.REMOVE, mappedBy = "student")
     private List<GradeEntity> grades;
 }

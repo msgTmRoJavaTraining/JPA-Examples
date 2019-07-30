@@ -82,6 +82,16 @@ public class MyJPQLTest extends JPABaseTest {
         grade2.setSubject(subj1);
         grade2.setStudent(stud1);
 
+        GradeEntity grade3 = new GradeEntity();
+        grade3.setGrade(5);
+        grade3.setSubject(subj1);
+        grade3.setStudent(stud2);
+
+        GradeEntity grade4 = new GradeEntity();
+        grade4.setGrade(9);
+        grade4.setSubject(subj1);
+        grade4.setStudent(stud2);
+
         em.persist(univ1);
         em.persist(univ2);
         em.persist(subj1);
@@ -89,6 +99,8 @@ public class MyJPQLTest extends JPABaseTest {
         em.persist(stud2);
         em.persist(grade1);
         em.persist(grade2);
+        em.persist(grade3);
+        em.persist(grade4);
 
         utx.commit();
         em.clear();
@@ -116,22 +128,30 @@ public class MyJPQLTest extends JPABaseTest {
         Assert.assertEquals("Failed test!", 1, jpql.getResultList().size());
         for (StudentEntity s : list
         ) {
-            logger.info(subject + s.getFirst_name() + " " + s.getLast_name());
+            logger.info(subject + " \n" + s.getFirst_name() + " " + s.getLast_name());
         }
     }
 
     @Test
     public void averageGrade() {
-        TypedQuery<StudentEntity> jpql = em.createQuery("select avg(gr.grade) from StudentEntity s join s.grades gr", StudentEntity.class);
-        Assert.assertEquals("Failed test!", 1, jpql.getResultList().size());
-        logger.info("Result= " + jpql.getResultList().toString());
+        Query jpql = em.createQuery("select avg(gr.grade),s.first_name,s.last_name from StudentEntity s join s.grades gr group by s.student_id,s.first_name,s.last_name", StudentEntity.class);
+        List results = jpql.getResultList();
+        logger.info("Average Firstname Lastname");
+        for (Object s : results) {
+            List<Object> list = Arrays.asList((Object[]) s);
+            logger.info(list.get(0).toString() + " " + list.get(1).toString() + " " + list.get(2).toString());
+        }
     }
 
     @Test
     public void averageGradeAbove8() {
-        TypedQuery<StudentEntity> jpql = em.createQuery("select avg(gr.grade) from StudentEntity s join s.grades gr having avg(gr.grade) > 7 ", StudentEntity.class);
-        Assert.assertEquals("Failed test!", 1, jpql.getResultList().size());
-        logger.info("Result= " + jpql.getResultList().toString());
+        Query jpql = em.createQuery("select avg(gr.grade),s.first_name,s.last_name from StudentEntity s join s.grades gr group by s.student_id,s.first_name,s.last_name having avg(gr.grade) > 7", StudentEntity.class);
+        List results = jpql.getResultList();
+        logger.info("Average Firstname Lastname");
+        for (Object s : results) {
+            List<Object> list = Arrays.asList((Object[]) s);
+            logger.info(list.get(0).toString() + " " + list.get(1).toString() + " " + list.get(2).toString());
+        }
     }
 
     @Test
