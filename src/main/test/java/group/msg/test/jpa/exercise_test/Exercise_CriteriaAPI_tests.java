@@ -1,6 +1,9 @@
 package group.msg.test.jpa.exercise_test;
 
-
+import group.msg.examples.jpa.entity.SimpleEntity;
+import group.msg.examples.jpa.entity.mapping.ManyEntity;
+import group.msg.examples.jpa.entity.mapping.OneEntity;
+import group.msg.examples.jpa.entity.mapping.VagueEntity_;
 import group.msg.examples.jpa.exercise_entityPackage.*;
 import group.msg.test.jpa.JPABaseTest;
 import org.jboss.arquillian.container.test.api.Deployment;
@@ -11,12 +14,15 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import javax.persistence.Query;
+import javax.persistence.Tuple;
 import javax.persistence.TypedQuery;
+import javax.persistence.criteria.*;
+import java.security.SecureRandom;
 import java.util.ArrayList;
 import java.util.List;
 
 @RunWith(Arquillian.class)
-public class Exercise_JPQL_Tests extends JPABaseTest {
+public class Exercise_CriteriaAPI_tests extends JPABaseTest {
 
     @Deployment
     public static WebArchive createDeployment() {
@@ -27,49 +33,92 @@ public class Exercise_JPQL_Tests extends JPABaseTest {
     }
 
     @Test
-    public void testJpql() {
-        TypedQuery<Student> jpql = em.createQuery("select stud from Student stud where stud.address.city in ('city')", Student.class);
-        List<Student> stud = jpql.getResultList();
+    public void testCityMatch() {
+        CriteriaBuilder builder = em.getCriteriaBuilder();
+        CriteriaQuery<Student> likeQuery = builder.createQuery(Student.class);
+        Root<Student> likeEntity = likeQuery.from(Student.class);
+        CriteriaQuery<Student> likeSelect = likeQuery.select(likeEntity);
+        likeSelect.where(builder.like(likeEntity.get("address").get("city"), "city1"));
+
+        List<Student> stud = em.createQuery( likeSelect ).getResultList();
         for (Student s : stud) {
             System.out.println(s);
         }
     }
 
     @Test
-    public void testJoinJpql() {
-        TypedQuery<Student> join = em.createQuery("select  distinct stud from  Subject sub, Student stud join fetch stud.subjects where sub.name like 'sub1'", Student.class);
-        List<Student> joinList = join.getResultList();
-        for (Student s : joinList) {
+    public void testJoinOnSubjects() {
+
+        CriteriaBuilder builder = em.getCriteriaBuilder();
+        CriteriaQuery<Student> studentCriteriaQuery = builder.createQuery(Student.class);
+        Root<Student> stud = studentCriteriaQuery.from(Student.class);
+        Join<Student,Subject> sqlJoin = (Join<Student,Subject>) stud.fetch(Student_.subjects);
+
+        studentCriteriaQuery.select(stud).where(builder.like(sqlJoin.get(Subject_.name),"sub1"));
+
+        List<Student> students = em.createQuery(studentCriteriaQuery).getResultList();
+        for (Student s : students) {
             System.out.println(s);
         }
     }
 
     @Test
-    public void testAvgJpql() {
+    public void testAvgCriteria() {
 
-        Query joinAvg = em.createQuery("select avg(gr.grade) from Grades gr join gr.student stud group by stud.student_id ");
-        List<Double> avg = joinAvg.getResultList();
-        for (Double d : avg) {
-            System.out.println(d.toString());
+        CriteriaBuilder builder = em.getCriteriaBuilder();
+        CriteriaQuery<Double> studentCriteriaQuery = builder.createQuery(Double.class);
+        Root<Grades> gr = studentCriteriaQuery.from(Grades.class);
+        Join<Grades,Student> sqlJoin = gr.join(Grades_.student);
+
+        studentCriteriaQuery.select(builder.avg(gr.get("grade"))).groupBy(sqlJoin.get("student_id"));
+
+        List<Double> avgs = em.createQuery(studentCriteriaQuery).getResultList();
+        for (Double a : avgs) {
+            System.out.println(a);
+        }
+
+    }
+
+    @Test
+    public void testAvgGraderGreaterCriteria() {
+
+        CriteriaBuilder builder = em.getCriteriaBuilder();
+        CriteriaQuery<Tuple> studentCriteriaQuery = builder.createQuery(Tuple.class);
+        Root<Student> stud = studentCriteriaQuery.from(Student.class);
+        Join<Student,Grades> sqlJoin = (Join<Student,Grades>) stud.fetch(Student_.grades);
+
+        studentCriteriaQuery.multiselect(stud.get("lastName"),builder.avg(sqlJoin.get("grade"))).groupBy(stud.get("lastName")).having(builder.greaterThan(builder.avg(sqlJoin.get("grade")),8.0));
+        List<Tuple> tuples = em.createQuery(studentCriteriaQuery ).getResultList();
+        for ( Tuple tuple : tuples ) {
+            System.out.println(tuple.get(0)+ " " + tuple.get(1));
         }
     }
 
     @Test
-    public void testAvgGraderGreaterJpql() {
-        Query joinGreater = em.createQuery("select stud.lastName, avg(gr.grade) from Student stud join fetch stud.grades gr group by stud.lastName having avg(gr.grade)>8 ");
-        List<Object[]> avg = joinGreater.getResultList();
-        for (Object[] d : avg) {
-            System.out.println("Student with avg bigger than 8 : " + d[0]);
-        }
-    }
+    public void testCityCountCriteria() {
 
-    @Test
-    public void testCityCountJpql() {
-        Query records = em.createQuery("select count( distinct studd.lastName), studd.address.city from Student studd where studd.address.city in (select stud.address.city from Student stud) group by studd.address.city");
-        List<Object[]> rec = records.getResultList();
-        for (Object[] obj : rec) {
-            System.out.println(obj[0] + " students in city " + obj[1]);
+
+        CriteriaBuilder builder = em.getCriteriaBuilder();
+        CriteriaQuery<Tuple> principalQuery = builder.createQuery(Tuple.class);
+        Root<Student> stud = principalQuery.from(Student.class);
+
+        Subquery<String> subQuery = principalQuery.subquery(String.class);
+        Root<Student> studSubQuery = subQuery.from(Student.class);
+        subQuery.select(studSubQuery.get("address").get("city"));
+
+        principalQuery.multiselect(stud.get("lastName"),stud.get("address").get("city")).where(builder.in(subQuery)).groupBy(stud.get("address").get("city"));
+
+        TypedQuery<Tuple> tq = em.createQuery(principalQuery);
+        List<Tuple> tuples = tq.getResultList();
+        for (Tuple tuple : tuples ) {
+            System.out.println(tuple.get(0));
         }
+
+//        Query records = em.createQuery("select count( distinct studd.lastName), studd.address.city from Student studd where studd.address.city in (select stud.address.city from Student stud) group by studd.address.city");
+//        List<Object[]> rec = records.getResultList();
+//        for (Object[] obj : rec) {
+//            System.out.println(obj[0] + " students in city " + obj[1]);
+//        }
     }
 
     @Override
