@@ -1,4 +1,4 @@
-package group.msg.examples.jpa.exercise_InheritancePackage;
+package group.msg.examples.jpa.exerciseInheritancePackage;
 
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -14,8 +14,10 @@ import javax.persistence.Table;
 @Table(name = "bike")
 @DiscriminatorValue("subVehicle_bike")
 public class Bike extends Vehicle {
+
     @Column(name = "no_of_passengers")
     private int noOfPassengers;
+
     @Column(name = "saddle_height")
     private int saddleHeight;
 }

@@ -1,4 +1,4 @@
-package group.msg.examples.jpa.exercise_InheritancePackage;
+package group.msg.examples.jpa.exerciseInheritancePackage;
 
 import lombok.Data;
 

@@ -1,10 +1,9 @@
-package group.msg.test.jpa.exercise_test;
+package group.msg.test.jpa.exerciseTests;
 
-import com.oracle.wls.shaded.org.apache.xalan.xsltc.dom.AdaptiveResultTreeImpl;
-import group.msg.examples.jpa.exercise_entityPackage.Address;
-import group.msg.examples.jpa.exercise_entityPackage.Student;
-import group.msg.examples.jpa.exercise_entityPackage.Subject;
-import group.msg.examples.jpa.exercise_entityPackage.University;
+import group.msg.examples.jpa.exerciseEntityPackage.Address;
+import group.msg.examples.jpa.exerciseEntityPackage.Student;
+import group.msg.examples.jpa.exerciseEntityPackage.Subject;
+import group.msg.examples.jpa.exerciseEntityPackage.University;
 import group.msg.test.jpa.JPABaseTest;
 import org.jboss.arquillian.container.test.api.Deployment;
 import org.jboss.arquillian.junit.Arquillian;
@@ -23,7 +22,7 @@ import java.util.List;
 import java.util.Objects;
 
 @RunWith(Arquillian.class)
-public class Exercise_validationTest extends JPABaseTest {
+public class ExerciseValidationTests extends JPABaseTest {
     @PersistenceUnit(unitName = "test")
     private EntityManagerFactory emf;
 
@@ -37,66 +36,76 @@ public class Exercise_validationTest extends JPABaseTest {
 
     @Test
     public void testValidationForFields() throws Exception {
-        University u1 = new University();
-        University u2 = new University();
-        List<Subject> sub = new ArrayList<>();
-        List<Subject> sub2 = new ArrayList<>();
-        Subject s1 = new Subject();
-        Subject s2 = new Subject();
-        Subject s3 = new Subject();
-        Address adr2= null;
-        s1.setName("sub1");
-        s1.setSubject_id(1);
-        s2.setName("sub2");
-        s2.setSubject_id(2);
-        s3.setName("sub3");
-        s3.setSubject_id(3);
+        University university1 = new University();
+        University university2 = new University();
+        List<Subject> subjectsList1 = new ArrayList<>();
+        List<Subject> subjectsList2 = new ArrayList<>();
+        Subject subject1 = new Subject();
+        Subject subject2 = new Subject();
+        Subject subject3 = new Subject();
+        Address address= null;
+        subject1.setName("sub1");
+        subject1.setSubject_id(1);
 
-        sub.add(s1);
-        sub.add(s2);
-        sub2.add(s3);
-        sub2.add(s1);
-        u1.setName("UVT");
-        u1.setUniversity_id(12);
-        u1.setCountry("country");
-        u2.setName("UPT");
-        u2.setUniversity_id(13);
-        u2.setCountry("OtherCountry");
-        validateEntry(49, adr2,"hello", "hi", "firstLastName@gmail.com",u1,sub2);
-        validateEntry(49, adr2,"someone", "hi", "firstLastName@gmail.com",u1,sub2);
+        subject2.setName("subjectsList2");
+        subject2.setSubject_id(2);
+
+        subject3.setName("sub3");
+        subject3.setSubject_id(3);
+
+        subjectsList1.add(subject1);
+        subjectsList1.add(subject2);
+
+        subjectsList2.add(subject3);
+        subjectsList2.add(subject1);
+
+        university1.setName("UVT");
+        university1.setUniversity_id(12);
+        university1.setCountry("country");
+
+        university2.setName("UPT");
+        university2.setUniversity_id(13);
+        university2.setCountry("OtherCountry");
+
+        validateEntry(49, address,"hello", "hi", "firstLastName@gmail.com",university1,subjectsList2);
+        validateEntry(49, address,"someone", "hi", "firstLastName@gmail.com",university1,subjectsList2);
     }
 
     @Test
     public void testValidationForCountry() throws Exception {
-        University u1 = new University();
-        University u2 = new University();
-        List<Subject> sub = new ArrayList<>();
-        List<Subject> sub2 = new ArrayList<>();
-        Subject s1 = new Subject();
-        Subject s2 = new Subject();
-        Subject s3 = new Subject();
-        Address adr= new Address("somewhere","city", "Othercountry");
-        Address adr2=new Address("somewhere","city", "country1");
-        s1.setName("sub1");
-        s1.setSubject_id(1);
-        s2.setName("sub2");
-        s2.setSubject_id(2);
-        s3.setName("sub3");
-        s3.setSubject_id(3);
+        University uni1 = new University();
+        University uni2 = new University();
+        List<Subject> subjectsList1 = new ArrayList<>();
+        List<Subject> subjectsList2 = new ArrayList<>();
+        Subject subject1 = new Subject();
+        Subject subject2 = new Subject();
+        Subject subject3 = new Subject();
+        Address address= new Address("somewhere","city", "Othercountry");
+        subject1.setName("sub1");
+        subject1.setSubject_id(1);
 
-        sub.add(s1);
-        sub.add(s2);
-        sub2.add(s3);
-        sub2.add(s1);
+        subject2.setName("subjectsList2");
+        subject2.setSubject_id(2);
 
-        u1.setName("UVT");
-        u1.setUniversity_id(12);
-        u1.setCountry("country");
-        u2.setName("UPT");
-        u2.setUniversity_id(13);
-        u2.setCountry("OtherCountry");
-        validateEntry(49,adr,"hello", "hi", "firstLastName@gmail.com",u2,sub);
-        validateEntry(49, adr,"test", null, "validate",u1,sub2);
+        subject3.setName("sub3");
+        subject3.setSubject_id(3);
+
+        subjectsList1.add(subject1);
+        subjectsList1.add(subject2);
+
+        subjectsList2.add(subject3);
+        subjectsList2.add(subject1);
+
+        uni1.setName("UVT");
+        uni1.setUniversity_id(12);
+        uni1.setCountry("country");
+
+        uni2.setName("UPT");
+        uni2.setUniversity_id(13);
+        uni2.setCountry("OtherCountry");
+
+        validateEntry(49,address,"hello", "hi", "firstLastName@gmail.com",uni2,subjectsList1);
+        validateEntry(49, address,"test", null, "validate",uni1,subjectsList2);
     }
 
     private void validateEntry(int id, Address adr, String firstname, String lastname,
@@ -134,11 +143,9 @@ public class Exercise_validationTest extends JPABaseTest {
 
     @Override
     protected void startTransaction() {
-        // Multiple transactions needed
     }
 
     @Override
     public void commitTransaction() {
-        // Don't commit non existent transaction
     }
 }

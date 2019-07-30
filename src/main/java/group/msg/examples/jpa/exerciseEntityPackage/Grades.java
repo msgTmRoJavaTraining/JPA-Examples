@@ -1,7 +1,5 @@
-package group.msg.examples.jpa.exercise_entityPackage;
+package group.msg.examples.jpa.exerciseEntityPackage;
 
-import com.fasterxml.jackson.annotation.JsonPropertyOrder;
-import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
 

@@ -1,10 +1,10 @@
-package group.msg.test.jpa.exercise_Inheritance_tests;
+package group.msg.test.jpa.exerciseInheritanceTests;
 
 
-import group.msg.examples.jpa.exercise_InheritancePackage.Bike;
-import group.msg.examples.jpa.exercise_InheritancePackage.Car;
-import group.msg.examples.jpa.exercise_InheritancePackage.Truck;
-import group.msg.examples.jpa.exercise_InheritancePackage.Vehicle;
+import group.msg.examples.jpa.exerciseInheritancePackage.Bike;
+import group.msg.examples.jpa.exerciseInheritancePackage.Car;
+import group.msg.examples.jpa.exerciseInheritancePackage.Truck;
+import group.msg.examples.jpa.exerciseInheritancePackage.Vehicle;
 import group.msg.test.jpa.JPABaseTest;
 import org.jboss.arquillian.container.test.api.Deployment;
 import org.jboss.arquillian.junit.Arquillian;
@@ -19,7 +19,6 @@ import javax.persistence.Query;
 @RunWith(Arquillian.class)
 public class TestInheritance extends JPABaseTest {
 
-    private static final int NUMBER_OF_ENTITIES = 5;
 
     @Deployment
     public static WebArchive createDeployment() {
@@ -30,7 +29,7 @@ public class TestInheritance extends JPABaseTest {
     }
 
     @Test
-    public void testCreateMappedEntity() {
+    public void testVehicleEntity() {
         Query check = em.createNativeQuery("select b.IdVehicle from BIKE B ");
         Assert.assertEquals("Entity not updated!", 2, check.getResultList().size());
     }
@@ -39,34 +38,34 @@ public class TestInheritance extends JPABaseTest {
         utx.begin();
         em.joinTransaction();
         System.out.println("Inserting records...");
-        Vehicle v1 = new Vehicle();
-        Vehicle v2 = new Vehicle();
-        Truck tr1 = new Truck();
-        Truck tr2 = new Truck();
+        Vehicle veh1 = new Vehicle();
+        Vehicle veh2 = new Vehicle();
+        Truck truck1 = new Truck();
+        Truck truck2 = new Truck();
         Car car1 = new Car();
         Car car2 = new Car();
-        Bike b1 = new Bike();
-        Bike b2 = new Bike();
+        Bike bike1 = new Bike();
+        Bike bike2 = new Bike();
 
-        v1.setIdVehicle(1);
-        v1.setManufacturer("veh1");
-        v1.setVehicle_type("vehicle");
+        veh1.setIdVehicle(1);
+        veh1.setManufacturer("veh1");
+        veh1.setVehicle_type("vehicle");
 
-        v2.setIdVehicle(2);
-        v2.setManufacturer("veh2");
-        v2.setVehicle_type("vehicle");
+        veh2.setIdVehicle(2);
+        veh2.setManufacturer("veh2");
+        veh2.setVehicle_type("vehicle");
 
-        tr1.setIdVehicle(3);
-        tr1.setManufacturer("trk1");
-        tr1.setVehicle_type("truck");
-        tr1.setLoadCapacity(12);
-        tr1.setNoOfContainers(3);
+        truck1.setIdVehicle(3);
+        truck1.setManufacturer("trk1");
+        truck1.setVehicle_type("truck");
+        truck1.setLoadCapacity(12);
+        truck1.setNoOfContainers(3);
 
-        tr2.setIdVehicle(4);
-        tr2.setManufacturer("trk2");
-        tr2.setVehicle_type("truck");
-        tr2.setLoadCapacity(10);
-        tr2.setNoOfContainers(2);
+        truck2.setIdVehicle(4);
+        truck2.setManufacturer("trk2");
+        truck2.setVehicle_type("truck");
+        truck2.setLoadCapacity(10);
+        truck2.setNoOfContainers(2);
 
         car1.setIdVehicle(5);
         car1.setManufacturer("car1");
@@ -80,27 +79,27 @@ public class TestInheritance extends JPABaseTest {
         car2.setVehicle_type("car");
         car2.setNoOfDoors(4);
 
-        b1.setIdVehicle(7);
-        b1.setManufacturer("bik1");
-        b1.setVehicle_type("bike");
-        b1.setNoOfPassengers(2);
-        b1.setSaddleHeight(34);
+        bike1.setIdVehicle(7);
+        bike1.setManufacturer("bik1");
+        bike1.setVehicle_type("bike");
+        bike1.setNoOfPassengers(2);
+        bike1.setSaddleHeight(34);
 
-        b2.setIdVehicle(8);
-        b2.setManufacturer("bik2");
-        b2.setVehicle_type("bike");
-        b2.setNoOfPassengers(1);
-        b2.setSaddleHeight(24);
+        bike2.setIdVehicle(8);
+        bike2.setManufacturer("bik2");
+        bike2.setVehicle_type("bike");
+        bike2.setNoOfPassengers(1);
+        bike2.setSaddleHeight(24);
 
 
-        em.persist(v1);
-        em.persist(v2);
-        em.persist(tr1);
-        em.persist(tr2);
+        em.persist(veh1);
+        em.persist(veh2);
+        em.persist(truck1);
+        em.persist(truck2);
         em.persist(car1);
         em.persist(car2);
-        em.persist(b1);
-        em.persist(b2);
+        em.persist(bike1);
+        em.persist(bike2);
         utx.commit();
         em.clear();
     }

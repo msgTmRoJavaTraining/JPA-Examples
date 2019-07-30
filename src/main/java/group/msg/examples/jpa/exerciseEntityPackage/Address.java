@@ -1,6 +1,7 @@
-package group.msg.examples.jpa.exercise_entityPackage;
+package group.msg.examples.jpa.exerciseEntityPackage;
 
 import lombok.Data;
+
 import javax.persistence.Embeddable;
 import javax.validation.constraints.NotNull;
 import java.io.Serializable;

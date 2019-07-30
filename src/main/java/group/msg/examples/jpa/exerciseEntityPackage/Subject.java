@@ -1,4 +1,4 @@
-package group.msg.examples.jpa.exercise_entityPackage;
+package group.msg.examples.jpa.exerciseEntityPackage;
 import lombok.Data;
 
 import javax.persistence.*;

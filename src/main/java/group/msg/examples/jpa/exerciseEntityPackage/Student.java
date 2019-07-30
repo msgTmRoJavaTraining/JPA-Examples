@@ -1,5 +1,5 @@
-package group.msg.examples.jpa.exercise_entityPackage;
-import lombok.Data;
+package group.msg.examples.jpa.exerciseEntityPackage;
+
 import lombok.Getter;
 import lombok.Setter;
 

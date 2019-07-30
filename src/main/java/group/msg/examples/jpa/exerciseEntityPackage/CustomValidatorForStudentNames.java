@@ -1,4 +1,4 @@
-package group.msg.examples.jpa.exercise_entityPackage;
+package group.msg.examples.jpa.exerciseEntityPackage;
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
 import java.util.ArrayList;
