@@ -25,3 +25,5 @@ hs_err_pid*
 # IntelliJ configuration files
 .idea
 *.iml
+
+target
