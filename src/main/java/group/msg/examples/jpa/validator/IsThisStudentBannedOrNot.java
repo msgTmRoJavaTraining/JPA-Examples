@@ -12,11 +12,11 @@ import static java.lang.annotation.RetentionPolicy.RUNTIME;
 @Target({FIELD})
 @Retention(RUNTIME)
 public @interface IsThisStudentBannedOrNot {
-  String message() default "Sorry, but this student is banned!";
+    String message() default "Sorry, but this student is banned!";
 
-  Class<?>[] groups() default {};
+    Class<?>[] groups() default {};
 
-  Class<? extends Payload>[] payload() default {};
+    Class<? extends Payload>[] payload() default {};
 
-  boolean includeHardCodedValue() default true;
+    boolean includeHardCodedValue() default true;
 }

@@ -3,8 +3,6 @@ package group.msg.examples.jpa.entity;
 import lombok.Data;
 
 import javax.persistence.Embeddable;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
 import javax.validation.constraints.NotNull;
 
 @Data

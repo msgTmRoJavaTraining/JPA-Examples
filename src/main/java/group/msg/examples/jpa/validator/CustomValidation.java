@@ -12,11 +12,11 @@ import static java.lang.annotation.RetentionPolicy.RUNTIME;
 @Target({FIELD})
 @Retention(RUNTIME)
 public @interface CustomValidation {
-  String message() default "Custom validation did not pass!";
+    String message() default "Custom validation did not pass!";
 
-  Class<?>[] groups() default {};
+    Class<?>[] groups() default {};
 
-  Class<? extends Payload>[] payload() default {};
+    Class<? extends Payload>[] payload() default {};
 
-  boolean includeHardCodedValue() default true;
+    boolean includeHardCodedValue() default true;
 }
