@@ -5,7 +5,7 @@ import javax.validation.ConstraintValidatorContext;
 import java.util.ArrayList;
 import java.util.List;
 
-public class CustomValidator implements ConstraintValidator<CustomValidation, Integer> {
+public class CustomValidator implements ConstraintValidator<CustomValidation, String> {
 
   private boolean valueBaned;
   private List<String> name = new ArrayList<>();
@@ -15,16 +15,20 @@ public class CustomValidator implements ConstraintValidator<CustomValidation, In
     valueBaned = validation.includeHardCodedValue();
   }
 
+    public static String[] names = new String[10];
+
+    private void setName(String[] str) {
+        names = str;
+
+    }
   @Override
-  public boolean isValid(Integer value, ConstraintValidatorContext validatorContext) {
-    if (value == null) {
+  public boolean isValid(String str, ConstraintValidatorContext validatorContext) {
+
+      for (String string : names
+      ) {
+          if (string.contains(str))
+              return false;
+      }
       return true;
-    }
-
-    if (value == 123) {
-        return valueBaned;
-    }
-
-    return value % 2 == 0;
   }
 }
