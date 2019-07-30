@@ -42,7 +42,7 @@ public class TestCasesCurrentDay extends JPABaseTest {
         TypedQuery<StudentEntity> query = em.createQuery("select stud.first_name from StudentEntity stud where stud.home_address.city = :givenCity", StudentEntity.class);
         query.setParameter("givenCity", "Timisoara");
 
-        Assert.assertEquals("First Query", 1, query.getResultList().size());
+        Assert.assertEquals("First Query", 2, query.getResultList().size());
         System.out.println("Query: " + query.getResultList().toString());
     }
 
