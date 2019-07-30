@@ -1,6 +1,8 @@
 package group.msg.test.jpa.day17;
 
 import group.msg.examples.jpa.entity.day14.*;
+import group.msg.examples.jpa.entity.day17.FifthTestModel;
+import group.msg.examples.jpa.entity.day17.ForthTestModel;
 import group.msg.test.jpa.JPABaseTest;
 import org.jboss.arquillian.container.test.api.Deployment;
 import org.jboss.arquillian.junit.Arquillian;
@@ -85,20 +87,21 @@ public class TestCasesDay17 extends JPABaseTest {
     @Test
     public void thirdTest() {
         CriteriaBuilder builder = em.getCriteriaBuilder();
-        CriteriaQuery query = builder.createQuery();
+        CriteriaQuery<ForthTestModel> query = builder.createQuery(ForthTestModel.class);
         Root<StudentEntity> studentEntityRoot = query.from(em.getMetamodel().entity(StudentEntity.class));
 
         Join<StudentEntity, GradesEntity> fetch = (Join<StudentEntity, GradesEntity>) studentEntityRoot.fetch(StudentEntity_.grades, JoinType.INNER);
 
-        query.multiselect(studentEntityRoot.get(StudentEntity_.last_name),
+        query.select(builder.construct(ForthTestModel.class,
+                studentEntityRoot.get(StudentEntity_.last_name),
                 studentEntityRoot.get(StudentEntity_.first_name),
-                builder.avg(fetch.get(GradesEntity_.grade)));
+                builder.avg(fetch.get(GradesEntity_.grade))));
 
         query.groupBy(studentEntityRoot.get(StudentEntity_.last_name), studentEntityRoot.get(StudentEntity_.first_name));
 
-        List<Object[]> results = em.createQuery(query).getResultList();
-        for (Object[] result : results) {
-            System.out.println("Student: " + result[0] + " " + result[1] + ", media: " + result[2]);
+        List<ForthTestModel> results = em.createQuery(query).getResultList();
+        for (ForthTestModel result : results) {
+            System.out.println("Student: " + result.getLastName() + " " + result.getFirstName() + ", media: " + result.getGradeAverage());
         }
     }
 
@@ -106,14 +109,15 @@ public class TestCasesDay17 extends JPABaseTest {
     @Test
     public void fourthTest() {
         CriteriaBuilder builder = em.getCriteriaBuilder();
-        CriteriaQuery query = builder.createQuery();
+        CriteriaQuery<ForthTestModel> query = builder.createQuery(ForthTestModel.class);
         Root<StudentEntity> studentEntityRoot = query.from(em.getMetamodel().entity(StudentEntity.class));
 
         Join<StudentEntity, GradesEntity> fetch = (Join<StudentEntity, GradesEntity>) studentEntityRoot.fetch(StudentEntity_.grades, JoinType.INNER);
 
-        query.multiselect(studentEntityRoot.get(StudentEntity_.last_name),
+        query.select(builder.construct(ForthTestModel.class,
+                studentEntityRoot.get(StudentEntity_.last_name),
                 studentEntityRoot.get(StudentEntity_.first_name),
-                builder.avg(fetch.get(GradesEntity_.grade)));
+                builder.avg(fetch.get(GradesEntity_.grade))));
 
         query.having(builder.greaterThan(
                 builder.avg(fetch.get(GradesEntity_.grade)),
@@ -122,9 +126,9 @@ public class TestCasesDay17 extends JPABaseTest {
 
         query.groupBy(studentEntityRoot.get(StudentEntity_.last_name), studentEntityRoot.get(StudentEntity_.first_name));
 
-        List<Object[]> results = em.createQuery(query).getResultList();
-        for (Object[] result : results) {
-            System.out.println("Student: " + result[0] + " " + result[1] + ", media: " + result[2]);
+        List<ForthTestModel> results = em.createQuery(query).getResultList();
+        for (ForthTestModel result : results) {
+            System.out.println("Student: " + result.getLastName() + " " + result.getFirstName() + ", media: " + result.getGradeAverage());
         }
     }
 
@@ -132,17 +136,18 @@ public class TestCasesDay17 extends JPABaseTest {
     @Test
     public void fifthTest() {
         CriteriaBuilder builder = em.getCriteriaBuilder();
-        CriteriaQuery query = builder.createQuery();
+        CriteriaQuery<FifthTestModel> query = builder.createQuery(FifthTestModel.class);
         Root<StudentEntity> studentEntityRoot = query.from(em.getMetamodel().entity(StudentEntity.class));
 
-        query.multiselect(studentEntityRoot.get(StudentEntity_.home_address).get(AddressEntity_.city),
-                builder.count(studentEntityRoot.get(StudentEntity_.student_id)));
+        query.select(builder.construct(FifthTestModel.class,
+                studentEntityRoot.get(StudentEntity_.home_address).get(AddressEntity_.city),
+                builder.count(studentEntityRoot.get(StudentEntity_.student_id))));
 
         query.groupBy(studentEntityRoot.get(StudentEntity_.home_address).get(AddressEntity_.city));
 
-        List<Object[]> results = em.createQuery(query).getResultList();
-        for (Object[] result : results) {
-            System.out.println("Studenti in " + result[0] + " : " + result[1]);
+        List<FifthTestModel> results = em.createQuery(query).getResultList();
+        for (FifthTestModel result : results) {
+            System.out.println("Studenti in " + result.getCityName() + " : " + result.getNumberOfStudents());
         }
     }
 
